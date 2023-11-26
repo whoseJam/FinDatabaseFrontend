@@ -30,21 +30,22 @@
 export default {
   methods: {
     onRegister: function() {
-      let username = document.getElementById("username");
-      let password = document.getElementById("password");
-      let confirm = document.getElementById("confirmPassword");
-      let email = document.getElementById("email");
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      let confirm = document.getElementById("confirmPassword").value;
+      let email = document.getElementById("email").value;
       if (password !== confirm) {
         alert("密码与确认密码不一致");
         return;
       }
       let self = this;
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("password", password);
+      formData.append("email", email);
+
       this.$http
-        .post("/user/register", {
-          username: username,
-          password: password,
-          email: email
-        })
+        .post("/user/register", formData)
         .then(function(res) {
           if (!res.success) {
             alert(res.message);
