@@ -35,6 +35,7 @@ export default {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
         .then(function(res) {
+          res = res.data;
           let success = res.success;
           if (!success) {
             alert(res.message);
