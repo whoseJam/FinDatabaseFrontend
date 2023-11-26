@@ -49,7 +49,9 @@ export default {
         url: '/user/register',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
-      }).then(function(res) {
+      })
+        .then(function(res) {
+          res = res.data;
           if (!res.success) {
             alert(res.message);
             return;

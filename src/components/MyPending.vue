@@ -44,6 +44,7 @@ export default {
     this.$http
       .post("/stock/simulate/order/" + userId)
       .then(function(res) {
+        res = res.data;
         self.pendingList = res;
       })
       .catch(function(err) {

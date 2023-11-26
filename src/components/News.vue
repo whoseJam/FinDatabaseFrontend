@@ -33,6 +33,7 @@ export default {
     this.$http
       .post("/stock/news")
       .then(function(data) {
+        data = data.data;
         self.articles = data;
       })
       .catch(function(err) {

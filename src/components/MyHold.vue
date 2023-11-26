@@ -54,6 +54,7 @@ export default {
     this.$http
       .post("/stock/simulate/hold/" + userId)
       .then(function(res) {
+        res = res.data;
         self.holdList = res;
       })
       .catch(function(err) {

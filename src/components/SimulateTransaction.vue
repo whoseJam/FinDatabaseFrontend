@@ -77,6 +77,7 @@ export default {
           type: type
         })
         .then(function(res) {
+          res = res.data;
           alert(res.message);
         })
         .catch(function(err) {

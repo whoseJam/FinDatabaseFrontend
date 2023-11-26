@@ -34,6 +34,7 @@ export default {
     this.$http
       .post("/stock/brief/" + this.stockId)
       .then(function(data) {
+        data = data.data;
         self.introduce = data.introduce;
         self.companyName = data.companyName;
       })

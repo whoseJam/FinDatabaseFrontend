@@ -24,11 +24,16 @@ export default {
     onLogin: function() {
       let username = document.getElementById("username").value;
       let password = document.getElementById("password").value;
-      this.$http
-        .post("/user/login", {
-          username: username,
-          password: password
-        })
+      
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("password", password);
+      this.$http({
+        method: "post",
+        url: "/user/login",
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
         .then(function(res) {
           let success = res.success;
           if (!success) {

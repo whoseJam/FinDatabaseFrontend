@@ -17,6 +17,7 @@ export default {
     this.$http
       .post("/stock/kline/" + this.stockId)
       .then(function(data) {
+        data = data.data;
         chart.applyNewData(data);
       })
       .catch(function(err) {

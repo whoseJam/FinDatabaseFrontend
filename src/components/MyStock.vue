@@ -54,6 +54,7 @@ export default {
     this.$http
       .post("/stock/favor/" + userId)
       .then(function(res) {
+        res = res.data;
         self.focusList = res;
       })
       .catch(function(err) {
