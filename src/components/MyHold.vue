@@ -44,21 +44,23 @@
 export default {
   data: function() {
     return {
-      holdList: [
-        { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
-      ]
+      holdList: []
     }
   },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
     if (!userId) return;
+    let self = this;
     this.$http
       .post("/stock/simulate/hold/" + userId)
       .then(function(res) {
-        this.holdList = res;
+        self.holdList = res;
       })
       .catch(function(err) {
         alert(err);
+        self.holdList = [
+          { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
+        ]
       })
   },
   methods: {

@@ -75,5 +75,4 @@ import MyHold from './MyHold.vue';
       <MyHold />
     </div>
   </div>
-
 </template>

@@ -40,6 +40,8 @@ export default {
         })
         .catch(function(err) {
           alert(err);
+          window.sessionStorage.setItem("userId", "233");
+          window.sessionStorage.setItem("user", "666");
         })
     }
   }

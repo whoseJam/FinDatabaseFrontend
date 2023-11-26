@@ -38,6 +38,7 @@ export default {
         alert("密码与确认密码不一致");
         return;
       }
+      let self = this;
       this.$http
         .post("/user/register", {
           username: username,
@@ -51,7 +52,7 @@ export default {
           }
           alert(res.message);
           setTimeout(function() {
-            this.$router.push({path: '/login'});
+            self.$router.push({path: '/login'});
           }, 3000);
         })
         .catch(function(err) {

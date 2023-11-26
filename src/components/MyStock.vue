@@ -44,24 +44,26 @@
 export default {
   data: function() {
     return {
-      focusList: [
-        { name: "富春股份", code: "SZ300299", newPrice: 6.62, deltaRate: -7.76, delta: -0.55 },
-        { name: "永泰能源", code: "SH600157", newPrice: 1.36, deltaRate: 0.00, delta: 0.00 },
-        { name: "白云机场", code: "SH600004", newPrice: 10.63, deltaRate: 0.85, delta: 0.09 },
-        { name: "浦发银行", code: "SH600000", newPrice: 6.89, deltaRate: -0.72, delta: -0.05 }
-      ]
+      focusList: []
     }
   },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
     if (!userId) return;
+    let self = this;
     this.$http
       .post("/stock/favor/" + userId)
       .then(function(res) {
-        this.focusList = res;
+        self.focusList = res;
       })
       .catch(function(err) {
         alert(err);
+        self.focusList = [
+          { name: "富春股份", code: "SZ300299", newPrice: 6.62, deltaRate: -7.76, delta: -0.55 },
+          { name: "永泰能源", code: "SH600157", newPrice: 1.36, deltaRate: 0.00, delta: 0.00 },
+          { name: "白云机场", code: "SH600004", newPrice: 10.63, deltaRate: 0.85, delta: 0.09 },
+          { name: "浦发银行", code: "SH600000", newPrice: 6.89, deltaRate: -0.72, delta: -0.05 }
+        ]
       })
   },
   methods: {
