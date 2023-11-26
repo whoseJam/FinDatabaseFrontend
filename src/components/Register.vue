@@ -43,15 +43,13 @@ export default {
       formData.append("username", username);
       formData.append("password", password);
       formData.append("email", email);
-      const config = {
-        headers: {
-          'content-type': 'multipart/form-data'
-        }
-      }
 
-      this.$http
-        .post("/user/register", formData, config)
-        .then(function(res) {
+      this.$http({
+        method: 'post',
+        url: '/user/register',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(function(res) {
           if (!res.success) {
             alert(res.message);
             return;
