@@ -4,7 +4,7 @@
       <div class="item">
         <i class="dollar sign icon"></i>
       </div>
-      <router-link 
+      <router-link
         v-for="item in navigatorList"
         :class="itemClasses(item.title)"
         :to="item.link">
@@ -41,8 +41,9 @@ export default {
   data: function() {
     return {
       navigatorList: [
-        { title: "主页", link: "/home" }, 
-        { title: "新闻", link: "/news" }, 
+        { title: "主页", link: "/home" },
+        { title: "新闻", link: "/news" },
+        { title: "帮助", link: "/help" },
         { title: "关于", link: "/about" }
       ],
       user: null
@@ -60,7 +61,7 @@ export default {
   },
   methods: {
     itemClasses: function(myItem) {
-      return myItem === this.activeItem ? 
+      return myItem === this.activeItem ?
         "ui active item" : "ui item";
     }
   }
