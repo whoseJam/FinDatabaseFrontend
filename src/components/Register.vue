@@ -59,7 +59,7 @@ export default {
       word = "" + tmp1 + " * " + tmp2 + " = ？"
     } else if (type == 3) {
       tmp2 = tmp2 % 4 + 1;
-      answer = tmp1 / tmp2;
+      answer = Math.trunc(tmp1 / tmp2);
       word = "" + tmp1 + " / " + tmp2 + " = ？（取整数部分）"
     }
     return {
