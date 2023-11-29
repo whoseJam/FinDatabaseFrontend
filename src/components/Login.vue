@@ -11,7 +11,7 @@
             <label>密码</label>
             <input id="password" type="password" name="password" placeholder="密码" />
           </div>
-          <button class="ui button" type="button" @click="onLogin">提交</button>
+          <button class="ui button" type="button" @click="onLogin">登录</button>
         </form>
       </div>
     </div>
