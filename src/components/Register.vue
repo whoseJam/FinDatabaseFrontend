@@ -23,8 +23,12 @@
             <input id="email" type="text" name="email" placeholder="电子邮箱" />
           </div>
           <div class="field">
+            <label id="codetxt">验证码  <font color=red>*</font> 请输入答案：{{ question }}</label>
+            <input id="code" type="text" name="code" placeholder="验证码" />
+          </div>
+          <div class="field">
             <label>
-              <input id="agree" type="checkbox" name="agree" placeholder="电子邮箱" />
+              <input id="agree" type="checkbox" name="agree" />
               我同意《股票查询及模拟交易平台使用说明》
             </label>
           </div>
@@ -36,7 +40,15 @@
 </template>
 
 <script>
+  var tmp1 = Math.round(Math.random() * 100);
+  var tmp2 = Math.round(Math.random() * 100);
+
 export default {
+  data: function() {
+    return {
+      question: "" + tmp1 + " + " + tmp2 + " = ?"
+    }
+  },
   methods: {
     onRegister: function() {
       let username = document.getElementById("username").value;
@@ -44,6 +56,7 @@ export default {
       let confirm = document.getElementById("confirmPassword").value;
       let email = document.getElementById("email").value;
       let agree = document.getElementById("agree");
+      let code = document.getElementById("code").value;
       if (!agree.checked) {
         alert("请阅读并勾选同意《股票查询及模拟交易平台使用说明》");
         return;
@@ -61,6 +74,9 @@ export default {
         return;
       } else if (password.length > 20) {
         alert("密码过长！密码长度应介于8-20位之间。");
+        return;
+      } else if (tmp1 + tmp2 != code) {
+        alert("验证码错误！");
         return;
       }
       let self = this;
