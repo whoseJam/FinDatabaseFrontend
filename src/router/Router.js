@@ -3,6 +3,7 @@ import { createRouter } from "vue-router"
 
 import MainPage from "../views/MainPage.vue"
 import News from "../views/News.vue"
+import Help from "../views/Help.vue"
 import About from "../views/About.vue"
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
@@ -29,6 +30,10 @@ const router = createRouter({
     {
       path: "/news",
       component: News
+    },
+    {
+      path: "/help",
+      component: Help
     },
     {
       path: "/about",
