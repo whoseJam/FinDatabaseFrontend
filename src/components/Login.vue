@@ -27,6 +27,13 @@ export default {
     onLogin: function() {
       let username = document.getElementById("username").value;
       let password = document.getElementById("password").value;
+      if (username.length == 0) {
+        alert("用户名不能为空！");
+        return;
+      } else if (password.length == 0) {
+        alert("密码不能为空！");
+        return;
+      }
 
       const formData = new FormData();
       formData.append("username", username);

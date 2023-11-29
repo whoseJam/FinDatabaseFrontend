@@ -40,13 +40,30 @@
 </template>
 
 <script>
-  var tmp1 = Math.round(Math.random() * 100);
-  var tmp2 = Math.round(Math.random() * 100);
+  var answer;
 
 export default {
   data: function() {
+    var tmp1 = Math.trunc(Math.random() * 20) + 1;
+    var tmp2 = Math.trunc(Math.random() * 20) + 1;
+    var type = Math.trunc(Math.random() * 4);
+    var word;
+    if (type == 0) {
+      answer = tmp1 + tmp2;
+      word = "" + tmp1 + " + " + tmp2 + " = ？"
+    } else if (type == 1) {
+      answer = tmp1 - tmp2;
+      word = "" + tmp1 + " - " + tmp2 + " = ？"
+    } else if (type == 2) {
+      answer = tmp1 * tmp2;
+      word = "" + tmp1 + " * " + tmp2 + " = ？"
+    } else if (type == 3) {
+      tmp2 = tmp2 % 4 + 1;
+      answer = tmp1 / tmp2;
+      word = "" + tmp1 + " / " + tmp2 + " = ？（取整数部分）"
+    }
     return {
-      question: "" + tmp1 + " + " + tmp2 + " = ?"
+      question: word
     }
   },
   methods: {
@@ -75,7 +92,7 @@ export default {
       } else if (password.length > 20) {
         alert("密码过长！密码长度应介于8-20位之间。");
         return;
-      } else if (tmp1 + tmp2 != code) {
+      } else if (answer != code) {
         alert("验证码错误！");
         return;
       }
