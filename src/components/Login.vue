@@ -1,8 +1,11 @@
 <template>
   <div class="ui container">
     <div class="ui vertical masthead segment">
-      <div class="ui segment">
-        <form class="ui form">
+      <div class="ui segment" style="width: 50%; margin: auto;">
+        <h1 class="ui header" style="text-align: center;">
+        用户登录
+        </h1>
+        <form class="ui form" style="width: 80%; margin: auto;">
           <div class="field">
             <label>用户名</label>
             <input id="username" type="text" name="username" placeholder="用户名" />
@@ -24,7 +27,7 @@ export default {
     onLogin: function() {
       let username = document.getElementById("username").value;
       let password = document.getElementById("password").value;
-      
+
       const formData = new FormData();
       formData.append("username", username);
       formData.append("password", password);

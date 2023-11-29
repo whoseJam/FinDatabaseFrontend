@@ -1,18 +1,21 @@
 <template>
   <div class="ui container">
     <div class="ui vertical masthead segment">
-      <div class="ui segment">
-        <form class="ui form">
+      <div class="ui segment" style="width: 50%; margin: auto;">
+        <h1 class="ui header" style="text-align: center;">
+        新用户注册
+        </h1>
+        <form class="ui form" style="width: 80%; margin: auto;">
           <div class="field">
-            <label>用户名</label>
+            <label>用户名 <font color=red>*</font></label>
             <input id="username" type="text" name="username" placeholder="用户名" />
           </div>
           <div class="field">
-            <label>密码（8-20位，建议包含大小写字母、数字及符号以提高安全性）</label>
+            <label>密码 <font color=red>*</font>（8-20位，建议包含大小写字母、数字及符号以提高安全性）</label>
             <input id="password" type="password" name="password" placeholder="密码" />
           </div>
           <div class="field">
-            <label>确认密码</label>
+            <label>确认密码 <font color=red>*</font></label>
             <input id="confirmPassword" type="password" name="confirmPassword" placeholder="确认密码" />
           </div>
           <div class="field">
