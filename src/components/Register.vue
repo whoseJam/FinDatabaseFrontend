@@ -36,44 +36,51 @@
 export default {
   methods: {
     onRegister: function() {
-      let username = document.getElementById("username");
-      let password = document.getElementById("password");
-      let confirm = document.getElementById("confirmPassword");
-      let email = document.getElementById("email");
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      let confirm = document.getElementById("confirmPassword").value;
+      let email = document.getElementById("email").value;
       let agree = document.getElementById("agree");
       if (!agree.checked) {
         alert("请阅读并勾选同意《股票查询及模拟交易平台使用说明》");
         return;
-      } else if (username.value.length == 0) {
+      } else if (username.length == 0) {
         alert("用户名不能为空！");
         return;
-      } else if (password.value !== confirm.value) {
+      } else if (password !== confirm) {
         alert("密码与确认密码不一致");
         return;
-      } else if (password.value.length == 0) {
+      } else if (password.length == 0) {
         alert("密码不能为空！");
         return;
-      } else if (password.value.length < 8) {
+      } else if (password.length < 8) {
         alert("密码过短！密码长度应介于8-20位之间。");
         return;
-      } else if (password.value.length > 20) {
+      } else if (password.length > 20) {
         alert("密码过长！密码长度应介于8-20位之间。");
         return;
       }
-      this.$http
-        .post("/user/register", {
-          username: username,
-          password: password,
-          email: email
-        })
+      let self = this;
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("password", password);
+      formData.append("email", email);
+
+      this.$http({
+        method: 'post',
+        url: '/user/register',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
         .then(function(res) {
+          res = res.data;
           if (!res.success) {
             alert(res.message);
             return;
           }
           alert(res.message);
           setTimeout(function() {
-            this.$router.push({path: '/login'});
+            self.$router.push({path: '/login'});
           }, 3000);
         })
         .catch(function(err) {

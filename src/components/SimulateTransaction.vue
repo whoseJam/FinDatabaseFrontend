@@ -5,7 +5,7 @@
         <form class="ui form">
           <div class="field">
             <label>股票代码</label>
-            <input type="text" name="code" placeholder="请输入股票代码或名称" />
+            <input id="stockId" type="text" name="code" placeholder="请输入股票代码或名称" />
           </div>
           
           <div class="field">
@@ -63,18 +63,21 @@ export default {
     launchTransaction: function() {
       let price = +document.getElementById("price").value;
       let size = +document.getElementById("size").value;
+      let stockId = document.getElementById("stockId").value;
       let action = (this.action === "buy" ? "买" : "卖");
       let type = this.transactionType;
       let userId = window.sessionStorage.getItem("userId");
       this.$http
         .post("/stock/order", {
           userId: userId,
+          stockId: stockId,
           action: action,
           price: price,
           size: size,
           type: type
         })
         .then(function(res) {
+          res = res.data;
           alert(res.message);
         })
         .catch(function(err) {

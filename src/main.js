@@ -6,7 +6,7 @@ import router from './router/Router';
 import axios from "axios";
 
 axios.defaults.timeout = 2000;
-axios.defaults.baseURL = "http://localhost:8080"
+axios.defaults.baseURL = "http://localhost:8000"
 
 const app = createApp(App);
 app.config.globalProperties.$http = axios;
