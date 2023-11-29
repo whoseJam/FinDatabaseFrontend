@@ -52,7 +52,7 @@ export default {
     if (!userId) return;
     let self = this;
     this.$http
-      .post("/stock/favor/" + userId)
+      .post("/user/favor/" + userId)
       .then(function(res) {
         res = res.data;
         self.focusList = res;
