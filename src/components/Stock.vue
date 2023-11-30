@@ -6,7 +6,9 @@ import KLineChart from "./KLineChart.vue";
   <div class="ui container">
     <div class="ui vertical masthead segment">
       <div class="ui segment">
-        <h1 class="ui header">{{ companyName }}</h1>
+        <h1 class="ui header">
+          {{ stockId }} : {{ companyName }}
+          <button class="ui button" type="button" @click="choose" style="position: absolute; left:88%">添加自选</button></h1>
         <div class="discription">
           <p>{{ introduce }}</p>
         </div>
@@ -43,6 +45,31 @@ export default {
       })
   },
   methods: {
+    choose: function() {
+      let self = this;
+      let userId = window.sessionStorage.getItem("userId");
+      const formData = new FormData();
+      formData.append("stockId", this.stockId);
+      formData.append("userId", userId);
+
+      this.$http({
+        method: 'post',
+        url: '/user/addfavor',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+        .then(function(res) {
+          res = res.data;
+          if (res.success) {
+            alert("股票 " + this.stockId + " 已成功加入自选！");
+          } else {
+            alert("股票 " + this.stockId + " 添加自选失败！原因：" + res.message);
+          }
+        })
+        .catch(function(err) {
+          alert(err);
+        })
+    }
   }
 }
 </script>
