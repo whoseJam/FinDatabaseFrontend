@@ -49,6 +49,7 @@ export default {
       let self = this;
       let userId = window.sessionStorage.getItem("userId");
       const formData = new FormData();
+      console.log(this.stockId);
       formData.append("stockId", this.stockId);
       formData.append("userId", userId);
 
@@ -61,9 +62,9 @@ export default {
         .then(function(res) {
           res = res.data;
           if (res.success) {
-            alert("股票 " + this.stockId + " 已成功加入自选！");
+            alert("股票 " + self.stockId + " 已成功加入自选！");
           } else {
-            alert("股票 " + this.stockId + " 添加自选失败！原因：" + res.message);
+            alert("股票 " + self.stockId + " 添加自选失败！原因：" + res.message);
           }
         })
         .catch(function(err) {
