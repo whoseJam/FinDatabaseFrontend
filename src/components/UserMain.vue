@@ -76,7 +76,11 @@ export default {
   },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
-    if (!userId) return;
+    if (!userId) {
+      alert("请先登录！");
+      this.$router.push({path: '/login'});
+      return;
+    }
     let self = this;
     this.$http
       .post("/user/favor/" + userId)
@@ -101,6 +105,7 @@ export default {
       window.sessionStorage.removeItem("userId");
       window.sessionStorage.removeItem("user");
       alert("已成功退出登录！")
+      this.$router.push({path: '/'});
     },
     jump2Stock: function() {
       this.$router.push({path: '/myStock'});
