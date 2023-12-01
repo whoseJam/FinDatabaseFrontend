@@ -16,7 +16,7 @@
       </div>
       <div v-else class="right menu">
         <div class="ui simple dropdown link item">
-          <span class="text">我的</span>
+          <span class="text">用户：{{ user }}</span>
           <i class="dropdown icon"></i>
           <div class="ui menu">
             <router-link class="item" to="/userMain">用户主页</router-link>
