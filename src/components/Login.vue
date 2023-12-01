@@ -23,6 +23,14 @@
 
 <script>
 export default {
+  mounted: function() {
+    let userId = window.sessionStorage.getItem("userId");
+    if (userId) {
+      alert("您已经登录过了！");
+      this.$router.push({path: '/'});
+      return;
+    }
+  },
   methods: {
     onLogin: function() {
       let username = document.getElementById("username").value;

@@ -59,7 +59,11 @@ export default {
   },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
-    if (!userId) return;
+    if (!userId) {
+      alert("请先登录！");
+      this.$router.push({path: '/login'});
+      return;
+    }
     let self = this;
     this.$http
       .post("/user/favor/" + userId)
