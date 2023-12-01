@@ -27,6 +27,7 @@ export default {
     onLogin: function() {
       let username = document.getElementById("username").value;
       let password = document.getElementById("password").value;
+      let self = this;
       if (username.length == 0) {
         alert("用户名不能为空！");
         return;
@@ -53,11 +54,13 @@ export default {
           }
           window.sessionStorage.setItem("userId", res.userId);
           window.sessionStorage.setItem("user", username);
+          self.$router.push({path: '/userMain'});
         })
         .catch(function(err) {
-          alert(err);
+          alert("登录时遇到错误：" + err);
           window.sessionStorage.setItem("userId", "233");
           window.sessionStorage.setItem("user", "666");
+          self.$router.push({path: '/userMain'});
         })
     }
   }

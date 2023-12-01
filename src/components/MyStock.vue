@@ -8,8 +8,8 @@
         <h1 class="ui header">
           自选总览
         </h1>
-        <div id="chart" style="width: 40%;height:90%;position: absolute;left: 10%;"></div>
-        <div id="pie" style="width: 40%;height:70%;position: absolute;left: 50%;"></div>
+        <div id="chart" style="width: 40%;height:90%;position: absolute;left: 10%;" :key="refreshKey"></div>
+        <div id="pie" style="width: 40%;height:70%;position: absolute;left: 50%;" :key="refreshKey"></div>
       </div>
       <table class="ui unstackable table">
         <thead>
@@ -18,6 +18,7 @@
             <th>最新价</th>
             <th>涨跌幅</th>
             <th>涨跌额</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +37,10 @@
             </td>
             <td :style="computeStyle(item.deltaRate)">
               {{ item.delta }}
+            </td>
+            <td >
+              <button class="ui button" type="button" style="width: 40%;" @click="buy(item.code)">委托买入</button>
+              <button class="ui button" type="button" style="width: 40%;" @click="remove(item.code)">移出自选</button>
             </td>
           </tr>
         </tbody>
@@ -106,7 +111,7 @@ export default {
               data: [up, down, flat]
           }]
       };
-      chart.setOption(optionC);
+      chart.setOption(optionC, true);
       var pie = echarts.init(document.getElementById("pie"));
       var optionP = {
         color: ["red", "green", "gray"],
@@ -123,7 +128,15 @@ export default {
           }
         ]
       };
-      pie.setOption(optionP);
+      pie.setOption(optionP, true);
+    },
+    buy: function(stockId) {
+      stockId = stockId.substring(2);
+      this.$router.push({path: '/simulateBuy', query: {id: stockId}});
+    },
+    remove: function(stockId) {
+      alert("还没写：似乎没找到后端的对应接口");
+      location.reload();
     }
   }
 }

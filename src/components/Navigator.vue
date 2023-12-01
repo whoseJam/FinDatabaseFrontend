@@ -19,9 +19,10 @@
           <span class="text">我的</span>
           <i class="dropdown icon"></i>
           <div class="ui menu">
+            <router-link class="item" to="/userMain">用户主页</router-link>
             <router-link class="item" to="/myStock">自选</router-link>
             <router-link class="item" to="/simulate">模拟盘</router-link>
-            <router-link class="item" to="/logout">注销</router-link>
+            <router-link class="item" to="/" @click="logoff">注销</router-link>
           </div>
         </div>
       </div>
@@ -63,6 +64,11 @@ export default {
     itemClasses: function(myItem) {
       return myItem === this.activeItem ?
         "ui active item" : "ui item";
+    },
+    logoff: function() {
+      window.sessionStorage.removeItem("userId");
+      window.sessionStorage.removeItem("user");
+      alert("已成功退出登录！")
     }
   }
 }

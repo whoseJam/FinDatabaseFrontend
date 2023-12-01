@@ -48,8 +48,12 @@ export default {
     choose: function() {
       let self = this;
       let userId = window.sessionStorage.getItem("userId");
+      if (!userId) {
+        alert("股票 " + this.stockId + " 添加自选失败！原因：请先登录！");
+        self.$router.push({path: '/login'});
+        return;
+      }
       const formData = new FormData();
-      console.log(this.stockId);
       formData.append("stockId", this.stockId);
       formData.append("userId", userId);
 

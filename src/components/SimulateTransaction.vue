@@ -5,9 +5,9 @@
         <form class="ui form">
           <div class="field">
             <label>股票代码</label>
-            <input id="stockId" type="text" name="code" placeholder="请输入股票代码或名称" />
+            <input id="stockId" type="text" name="code" v-model="stockId" placeholder="请输入股票代码或名称" />
           </div>
-          
+
           <div class="field">
             <label>委托方式</label>
             <div class="ui compact menu">
@@ -47,8 +47,13 @@
 <script>
 export default {
   data: function() {
+    let id = this.$route.query.id;
+    if (id == undefined) {
+      id = "";
+    }
     return {
-      transactionType: "限价委托"
+      transactionType: "限价委托",
+      stockId: id
     }
   },
   props: {

@@ -15,6 +15,7 @@ import SimulateSell from "../views/SimulateSell.vue"
 import SimulateRegret from "../views/SimulateRegret.vue"
 import SimulateHold from "../views/SimulateHold.vue"
 import SimulateQuery from "../views/SimulateQuery.vue"
+import UserMain from "../views/UserMain.vue"
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -78,6 +79,10 @@ const router = createRouter({
     {
       path: "/simulateQuery",
       component: SimulateQuery
+    },
+    {
+      path: "/userMain",
+      component: UserMain
     }
   ]
 })
