@@ -16,6 +16,7 @@ import SimulateRegret from "../views/SimulateRegret.vue"
 import SimulateHold from "../views/SimulateHold.vue"
 import SimulateQuery from "../views/SimulateQuery.vue"
 import UserMain from "../views/UserMain.vue"
+import Test from "../views/TestView.vue"
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -83,6 +84,9 @@ const router = createRouter({
     {
       path: "/userMain",
       component: UserMain
+    },{
+      path:'/test',
+      component:Test
     }
   ]
 })
