@@ -8,7 +8,8 @@ import KLineChart from "./KLineChart.vue";
       <div class="ui segment">
         <h1 class="ui header">
           {{ stockId }} : {{ companyName }}
-          <button class="ui button" type="button" @click="choose" style="position: absolute; left:88%">添加自选</button></h1>
+          <button class="ui button" type="button" @click="buy" style="position: absolute; left:70%">委托买入</button>
+          <button class="ui button" type="button" @click="choose" style="position: absolute; left:85%">添加自选</button></h1>
         <div class="discription">
           <p>{{ introduce }}</p>
         </div>
@@ -74,7 +75,11 @@ export default {
         .catch(function(err) {
           alert(err);
         })
-    }
+    },
+    buy: function() {
+      let self = this;
+      this.$router.push({path: '/simulateBuy', query: {id: self.stockId}});
+    },
   }
 }
 </script>

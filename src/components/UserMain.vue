@@ -7,8 +7,8 @@
 
       <div class="ui segment" style="float:left; width: 40%; height:400px">
         <h3 class="ui header">用户信息</h3>
-        <p>用户名：{{ username }}</p>
-        <p>用户ID：{{ userId }}</p>
+        <p>用户名：<b>{{ username }}</b></p>
+        <p>用户ID：<b>{{ userId }}</b></p>
         <p>这里放什么好呢？</p>
         <button class="ui button" type="button" @click="logoff" style="position: absolute; left: 70%; top:85%">退出登录</button>
       </div>
@@ -53,7 +53,13 @@
           我的模拟
           <button class="ui button" type="button" style="position:relative; left:10%" @click="jump2Simulate">详情</button>
         </h3>
-        <p>这里放什么好呢？</p>
+        <div>
+          <p>当前总资产：<b>{{ allBalance }}</b></p>
+          <p>当前可用资金：<b>{{ usefulBalance }}</b></p>
+          <p>当前总盈亏：
+            <span :style="computeStyle(allDelta)"><b>{{ allDelta }}</b></span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -71,7 +77,10 @@ export default {
           code: "",
           newPrice: "",
           deltaRate: "",
-          delta: ""
+          delta: "",
+          allBalance: null,
+          usefulBalance: null,
+          allDelta: null
       }
   },
   mounted: function() {
@@ -99,6 +108,30 @@ export default {
         ];
         self.setData(self.focusList);
       });
+      this.$http
+      .post("/user/balance/" + userId)
+      .then(function(res) {
+        res = res.data;
+        self.allBalance = res.balance;
+      })
+      .catch(function(err) {
+        alert(err);
+        self.allBalance = 484300;
+      });
+    this.$http
+      .post("/stock/simulate/hold/" + userId)
+      .then(function(res) {
+        res = res.data;
+        self.holdList = res;
+        self.setUseful(self.holdList);
+      })
+      .catch(function(err) {
+        alert(err);
+        self.holdList = [
+          { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
+        ]
+        self.setUseful(self.holdList);
+      })
   },
   methods: {
     logoff: function() {
@@ -137,6 +170,14 @@ export default {
       this.newPrice = list[rand].newPrice;
       this.deltaRate = list[rand].deltaRate;
       this.delta = list[rand].delta;
+    },
+    setUseful: function(list) {
+      this.usefulBalance = this.allBalance;
+      this.allDelta = 0;
+      for (var i = 0; i < list.length; i++) {
+        this.usefulBalance -= list[i].newValue;
+        this.allDelta += list[i].delta;
+      }
     }
   }
 }

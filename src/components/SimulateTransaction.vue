@@ -47,19 +47,18 @@
 <script>
 export default {
   data: function() {
-    let id = this.$route.query.id;
-    if (id == undefined) {
-      id = "";
-    }
     return {
       transactionType: "限价委托",
-      stockId: id
+      stockId: ""
     }
   },
   props: {
     action: {
       default: "buy"
     }
+  },
+  mounted: function() {
+    this.stockId = this.$route.query.id;
   },
   methods: {
     setTransactionType: function(type) {
@@ -72,6 +71,20 @@ export default {
       let action = (this.action === "buy" ? "买" : "卖");
       let type = this.transactionType;
       let userId = window.sessionStorage.getItem("userId");
+
+      console.log(price);
+
+      if (stockId.length != 6) {
+        alert("请正确填写股票代码！");
+        return;
+      } else if (price <= 0) {
+        alert("请填写合法价格！");
+        return;
+      } else if (size <= 0) {
+        alert("请填写合法股数！");
+        return;
+      }
+
       this.$http
         .post("/stock/order", {
           userId: userId,
@@ -84,6 +97,9 @@ export default {
         .then(function(res) {
           res = res.data;
           alert(res.message);
+          if (res.success) {
+            this.$router.push({path: '/simulateRegret'});
+          }
         })
         .catch(function(err) {
           alert(err);

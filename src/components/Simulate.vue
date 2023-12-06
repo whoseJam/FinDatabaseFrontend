@@ -5,36 +5,9 @@ import MyHold from './MyHold.vue';
 <template>
   <div class="ui container">
     <div class="ui vertical masthead segment">
-      <div class="ui segment">
-        <h1 class="ui header">
-          我的模拟
-        </h1>
-      </div>
-      <div class="ui segment">
-        <div class="ui segment">
-          <h1 class="ui header">总资产</h1>
-          <span class="ui header">484300.00</span>
-        </div>
-        <div class="ui segment">
-          <div class="ui three column stackable center aligned grid">
-            <div class="middle aligned row">
-              <div class="column">
-                <h5 class="ui header">总市值</h5>
-                <span>33100.00</span>
-              </div>
-              <div class="column">
-                <h5 class="ui header">总盈亏</h5>
-                <span>-15700.00</span>
-              </div>
-              <div class="column">
-                <h5 class="ui header">可用资金</h5>
-                <span>451200.00</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
+      <h1 class="ui header">
+        我的模拟
+      </h1>
       <div class="ui segment">
         <div class="ui five column stackable center aligned grid">
           <div class="middle aligned row">

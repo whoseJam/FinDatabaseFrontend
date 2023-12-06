@@ -1,4 +1,25 @@
 <template>
+  <div class="ui segment">
+    <h1 class="ui header" style="text-align: center;">
+      当前总资产&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;{{ allBalance }}
+    </h1>
+    <div class="ui three column stackable center aligned grid">
+      <div class="middle aligned row">
+        <div class="column">
+          <h5 class="ui header">总市值</h5>
+          <span><b>{{ allValue }}</b></span>
+        </div>
+        <div class="column">
+          <h5 class="ui header">总盈亏</h5>
+          <span :style="computeStyle(allDelta)"><b>{{ allDelta }}</b></span>
+        </div>
+        <div class="column">
+          <h5 class="ui header">可用资金</h5>
+          <span><b>{{ allBalance - allValue }}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
   <table class="ui unstackable table">
     <thead>
       <tr>
@@ -44,7 +65,10 @@
 export default {
   data: function() {
     return {
-      holdList: []
+      holdList: [],
+      allValue: null,
+      allDelta: null,
+      allBalance: null
     }
   },
   mounted: function() {
@@ -56,16 +80,28 @@ export default {
     }
     let self = this;
     this.$http
+      .post("/user/balance/" + userId)
+      .then(function(res) {
+        res = res.data;
+        self.allBalance = res.balance;
+      })
+      .catch(function(err) {
+        alert(err);
+        self.allBalance = 484300;
+      });
+    this.$http
       .post("/stock/simulate/hold/" + userId)
       .then(function(res) {
         res = res.data;
         self.holdList = res;
+        self.setDetail(self.holdList);
       })
       .catch(function(err) {
         alert(err);
         self.holdList = [
           { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
         ]
+        self.setDetail(self.holdList);
       })
   },
   methods: {
@@ -74,6 +110,14 @@ export default {
       if (Math.abs(delta) <= eps) return "color: black";
       else if (delta > 0) return "color: red";
       return "color: green";
+    },
+    setDetail: function(list) {
+      this.allValue = 0;
+      this.allDelta = 0;
+      for (var i = 0; i < list.length; i++) {
+        this.allValue += list[i].newValue;
+        this.allDelta += list[i].delta;
+      }
     }
   }
 }
