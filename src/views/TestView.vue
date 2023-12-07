@@ -14,9 +14,8 @@
             <div class="upload"><button @click="upload">上传</button></div>
         </div>
     </el-dialog>
-
-    
-
+    <img :src="photoUrl
+        " alt="">
 </template>
 
 <script >
@@ -28,6 +27,7 @@ export default {
         return {
             isVisible: false,
             cropperInstance: null,
+            photoUrl: "",
         }
     },
     methods: {
@@ -70,20 +70,37 @@ export default {
                 imageSmoothingQuality: 'high',
             }).toBlob((blob) => {
                 console.log(blob)
-                const data=new FormData()
-                data.append("jpg",blob)
-                let self=this;
+                const data = new FormData()
+                data.append("photo", blob, '1.jpg')
+                data.append("userId", 1)
+                let self = this;
                 this.$http({
-        method: 'post',
-        url: '/user/upload',
-        data: data,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }).then(function(res){
-        res=res.data;
-        if(res.success){
-            alert(1)
-        }
-      })
+                    method: 'post',
+                    url: '/user/upload/photo',
+                    data: data,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function (res) {
+                    res = res.data;
+                    if (res.success) {
+
+                        alert(1)
+                        self.isVisible = false;
+                        const newdata = new FormData()
+                        newdata.append("userId", 1)
+                        self.$http({
+                            method: 'post',
+                            url: 'user/getPhoto',
+                            data: newdata,
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        }).then(function (res) {
+                            res = res.data
+                            self.photoUrl = res.image_url
+                            console.log(self.photoUrl)
+                        })
+
+                    }
+                })
+
 
             })
         }
@@ -105,7 +122,7 @@ export default {
 
 .container {
     width: 100%;
-    height:40vh
+    height: 40vh
 }
 
 .bottom {
