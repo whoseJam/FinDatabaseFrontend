@@ -114,17 +114,21 @@ export default {
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
     let self = this;
-    this.$http
-      .post("/user/getPhoto/" + userId)
-      .then(function(res) {
-        res = res.data
-        self.photoUrl = res.image_url
-        console.log(self.photoUrl)
-      })
-      .catch(function(err) {
-        alert("发生错误：" + err);
-        self.photoUrl = "src/test.png"
-      });
+    const newdata = new FormData();
+    newdata.append("userId", userId);
+    this.$http({
+      method: 'post',
+      url: 'user/getPhoto',
+      data: newdata,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(function(res) {
+      res = res.data
+      self.photoUrl = res.image_url
+      console.log(self.photoUrl)
+    }).catch(function(err) {
+      alert("发生错误：" + err);
+      self.photoUrl = "src/test.png"
+    });
     this.$http
       .post("/user/favor/" + userId)
       .then(function(res) {

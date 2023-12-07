@@ -65,9 +65,15 @@ export default {
     let self = this;
     console.log("user=", this.user);
     if (!this.user) this.user = null;
-    this.$http
-      .post("/user/getPhoto/" + id)
-      .then(function(res) {
+    else {
+      const newdata = new FormData();
+      newdata.append("userId", id);
+      this.$http({
+        method: 'post',
+        url: 'user/getPhoto',
+        data: newdata,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(function(res) {
         res = res.data
         self.photoUrl = res.image_url
         console.log(self.photoUrl)
@@ -75,7 +81,7 @@ export default {
       .catch(function(err) {
         alert("发生错误：" + err);
         self.photoUrl = "src/test.png"
-    });
+    });}
   },
   methods: {
     itemClasses: function(myItem) {
