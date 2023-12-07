@@ -6,10 +6,14 @@
       </h1>
 
       <div class="ui segment" style="float:left; width: 40%; height:400px">
-        <h3 class="ui header">用户信息</h3>
-        <p>用户名：<b>{{ username }}</b></p>
-        <p>用户ID：<b>{{ userId }}</b></p>
-        <p>这里放什么好呢？</p>
+        <h3 class="ui header">用户信息</h3><br>
+        <div style="text-align: center;">
+          <img :src="photoUrl" alt="" style="height:150px; width:150px">
+          <br>
+          <p style="font-size: 24px;"><b>{{ username }}</b></p>
+          <p style="color: gray">用户ID：{{ userId }}</p>
+        </div>
+        <button class="ui button" type="button" @click="showUpload" style="position: absolute; left: 40%; top:85%">设置头像</button>
         <button class="ui button" type="button" @click="logoff" style="position: absolute; left: 70%; top:85%">退出登录</button>
       </div>
       <div class="ui segment" style="float:left; width: 60%; height:200px">
@@ -63,6 +67,22 @@
       </div>
     </div>
   </div>
+  <el-dialog title="头像预览" id="cropDialog" v-model="isCropVisible" width="70%" height="250px">
+    <div class="ctr">
+      <img id="cropImg">
+    </div>
+    <div class="bottom">
+      <div class="previewBox"></div>
+      <div class="upload"><button class="ui button" @click="upload">上传</button></div>
+    </div>
+  </el-dialog>
+  <el-dialog id="uploadDialog" v-model="isUploadVisible" width="70%" height="50%">
+    <el-upload class="upload-demo" action="" drag :auto-upload="false" :show-file-list="false" :on-change='changeUpload'>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">点击上传</div>
+        <div class="el-upload__tip">支持绝大多数图片格式，单张图片最大支持5MB</div>
+    </el-upload>
+  </el-dialog>
 </template>
 
 <script>
@@ -70,6 +90,11 @@ export default {
   data: function() {
       let user = window.sessionStorage.getItem("user");
       let id = window.sessionStorage.getItem("userId");
+      if (!id) {
+        alert("请先登录！");
+        this.$router.push({path: '/login'});
+        return;
+      }
       return {
           username: user,
           userId: id,
@@ -80,17 +105,26 @@ export default {
           delta: "",
           allBalance: null,
           usefulBalance: null,
-          allDelta: null
+          allDelta: null,
+          isUploadVisible: false,
+          isCropVisible: false,
+          photoUrl: "",
       }
   },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
-    if (!userId) {
-      alert("请先登录！");
-      this.$router.push({path: '/login'});
-      return;
-    }
     let self = this;
+    this.$http
+      .post("/user/getPhoto/" + userId)
+      .then(function(res) {
+        res = res.data
+        self.photoUrl = res.image_url
+        console.log(self.photoUrl)
+      })
+      .catch(function(err) {
+        alert("发生错误：" + err);
+        self.photoUrl = "src/test.png"
+      });
     this.$http
       .post("/user/favor/" + userId)
       .then(function(res) {
@@ -108,7 +142,7 @@ export default {
         ];
         self.setData(self.focusList);
       });
-      this.$http
+    this.$http
       .post("/user/balance/" + userId)
       .then(function(res) {
         res = res.data;
@@ -178,7 +212,103 @@ export default {
         this.usefulBalance -= list[i].newValue;
         this.allDelta += list[i].delta;
       }
+    },
+    showUpload: function() {
+      this.isUploadVisible = true;
+    },
+    changeUpload: function(file, fileList) {
+      let reader = new FileReader();
+      this.isCropVisible = true;
+      console.log(file.raw)
+      reader.readAsDataURL(file.raw)
+      reader.onload = (e) => {
+        let dataURL = reader.result;
+        document.querySelector('#cropImg').src = dataURL;
+        if (this.cropperInstance) {
+          this.cropperInstance.destroy();
+        }
+        const image = document.getElementById('cropImg');
+        this.cropperInstance = new Cropper(image, {
+          aspectRatio: 16 / 16,
+          viewMode: 0,
+          minContainerWidth: 20,
+          minContainerHeight: 20,
+          dragMode: 'move',
+          preview: [document.querySelector('.previewBox')]
+          })
+        }
+      // this.option.img = require(file.url)
+      this.isCropVisible = true
+      },
+    upload: function() {
+      this.cropperInstance.getCroppedCanvas({
+        maxWidth: 4096,
+        maxHeight: 4096,
+        fillColor: '#fff',
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+      }).toBlob((blob) => {
+        console.log(blob);
+        const data = new FormData();
+        let self = this;
+        data.append("photo", blob, '1.jpg');
+        data.append("userId", self.userId);
+        this.$http({
+          method: 'post',
+          url: '/user/upload/photo',
+          data: data,
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }).then(function (res) {
+          res = res.data;
+          if (res.success) {
+            alert("头像更改成功！")
+            self.isCropVisible = false;
+            self.isUploadVisible = false;
+            const newdata = new FormData()
+            newdata.append("userId", self.userId)
+            self.$http({
+              method: 'post',
+              url: 'user/getPhoto',
+              data: newdata,
+              headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(function (res) {
+              res = res.data
+              self.photoUrl = res.image_url
+              console.log(self.photoUrl)
+            }).catch(function(err) {
+              alert("发生错误：" + err);
+            })
+          }
+        }).catch(function(err) {
+          alert("发生错误：" + err);
+        })
+      })
     }
   }
 }
 </script>
+
+<style scoped>
+  .previewBox {
+      box-shadow: 0 0 5px #adadad;
+      width: 150px;
+      height: 150px;
+      overflow: hidden;
+      position: relative;
+      left: 15%;
+  }
+
+  .ctr {
+      height: 200px;
+      width: 50%;
+      float: left;
+      position: relative;
+      left: 10%;
+  }
+
+  .upload {
+      position: relative;
+      top: 10px;
+      left: 15%;
+  }
+</style>

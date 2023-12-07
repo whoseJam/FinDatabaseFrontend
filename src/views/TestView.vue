@@ -1,9 +1,18 @@
+<script setup>
+import Navigator from '../components/Navigator.vue';
+</script>
+
 <template>
+  <div id="root">
+    <header>
+      <Navigator />
+    </header>
+
+    <main>
     <el-upload class="upload-demo" action="" drag :auto-upload="false" :show-file-list="false" :on-change='changeUpload'>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">点击上传</div>
         <div class="el-upload__tip">支持绝大多数图片格式，单张图片最大支持5MB</div>
-
     </el-upload>
     <el-dialog id="cropDialog" v-model="isVisible" width="70%" height="50%">
         <div class="container">
@@ -16,11 +25,13 @@
     </el-dialog>
     <img :src="photoUrl
         " alt="">
+    </main>
+  </div>
 </template>
 
 <script >
-import 'cropperjs/dist/cropper.css';
-import Cropper from 'cropperjs';
+//import 'cropperjs/dist/cropper.css';
+//import Cropper from 'cropperjs';
 
 export default {
     data() {

@@ -16,7 +16,10 @@
       </div>
       <div v-else class="right menu">
         <div class="ui simple dropdown link item">
-          <span class="text">用户：{{ user }}</span>
+          <img :src="photoUrl" alt="" style="width: 30px; height: 30px;">
+          <span class="text">
+            &ensp;&ensp;{{ user }}
+          </span>
           <i class="dropdown icon"></i>
           <div class="ui menu">
             <router-link class="item" to="/userMain">用户主页</router-link>
@@ -47,7 +50,8 @@ export default {
         { title: "帮助", link: "/help" },
         { title: "关于", link: "/about" }
       ],
-      user: null
+      user: null,
+      photoUrl: ""
     }
   },
   props: {
@@ -57,8 +61,21 @@ export default {
   },
   mounted: function() {
     this.user = window.sessionStorage.getItem("user");
+    let id = window.sessionStorage.getItem("userId");
+    let self = this;
     console.log("user=", this.user);
     if (!this.user) this.user = null;
+    this.$http
+      .post("/user/getPhoto/" + id)
+      .then(function(res) {
+        res = res.data
+        self.photoUrl = res.image_url
+        console.log(self.photoUrl)
+      })
+      .catch(function(err) {
+        alert("发生错误：" + err);
+        self.photoUrl = "src/test.png"
+    });
   },
   methods: {
     itemClasses: function(myItem) {
