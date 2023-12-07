@@ -90,7 +90,7 @@ export default {
         self.allBalance = 484300;
       });
     this.$http
-      .post("/stock/simulate/hold/" + userId)
+      .post("/user/simulate/hold/" + userId)
       .then(function(res) {
         res = res.data;
         self.holdList = res;
