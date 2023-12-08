@@ -11,11 +11,12 @@
                         <div class="column" @dblclick="tryTurn">
                             <div v-if="showPage">当前所在页：{{ page }}&ensp;&ensp;第&ensp;{{ start }}&ensp;-&ensp;{{ end }}&ensp;条</div>
                             <div v-if="showPage" style="color: gray;">点击以查看详细信息</div>
+                            <div v-if="showPage" style="color: gray;">双击此处可自由跳页</div>
                             <div v-if="showTurn">
                             <form class="ui form" @submit.native.prevent>
                                 <div class="field">
                                     <label>页面号（Enter跳转）</label>
-                                    <input id="turn" type="text" name="turn" @keyup.enter="turnPage" style="width: 30%"/>
+                                    <input id="turn" type="text" name="turn" @keyup.enter="turnPage" style="width: 30%" />
                                 </div>
                             </form>
                             </div>
@@ -28,10 +29,10 @@
                                 <div class="field">
                                     <label>单页条数</label>
                                     <select id="number" name="number" @change="changeItemNum" style="text-align: center;">
-                                        <option value="10">10</option>
+                                        <option value="5">5</option>
+                                        <option value="10" selected>10</option>
                                         <option value="20">20</option>
                                         <option value="30">30</option>
-                                        <option value="50">50</option>
                                     </select>
                                 </div>
                             </form>
