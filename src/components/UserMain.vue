@@ -177,6 +177,7 @@ export default {
       window.sessionStorage.removeItem("user");
       alert("已成功退出登录！")
       this.$router.push({path: '/'});
+      location.reload();
     },
     jump2MyStock: function() {
       this.$router.push({path: '/myStock'});

@@ -21,6 +21,7 @@ export default {
     stockId: {
       handler(newVal, oldVal) {
         let chart = this.chart;
+        chart.createIndicator("MA", true, { id: 'candle_pane' });
         this.$http
           .post("/stock/kline/" + newVal)
           .then(function(data) {

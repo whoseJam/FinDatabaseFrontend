@@ -93,6 +93,8 @@ export default {
       window.sessionStorage.removeItem("userId");
       window.sessionStorage.removeItem("user");
       alert("已成功退出登录！")
+      this.$router.push({path: '/'});
+      location.reload();
     }
   }
 }
