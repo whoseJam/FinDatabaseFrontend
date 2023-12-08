@@ -34,23 +34,23 @@
       <tr v-for="item in holdList">
         <td :style="computeStyle(item.deltaRate)">
           <div class="vertical masthead segment">
-            <div>{{ item.name }}</div>
-            <div>{{ item.code }}</div>
+            <div @click="jump2Stock(item.code)">{{ item.name }}</div>
+            <div @click="jump2Stock(item.code)">{{ item.code }}</div>
           </div>
         </td>
-        <td :style="computeStyle(item.deltaRate)">
+        <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
           {{ item.newValue }}
         </td>
-        <td :style="computeStyle(item.deltaRate)">
+        <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
           <div class="vertical masthead segment">
             <div>{{ item.delta }}</div>
             <div>{{ item.deltaRate }}%</div>
           </div>
         </td>
-        <td :style="computeStyle(item.deltaRate)">
+        <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
           {{ item.hold }}
         </td>
-        <td :style="computeStyle(item.deltaRate)">
+        <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
           <div class="vertical masthead segment">
             <div>{{ item.newPrice }}</div>
             <div>{{ item.holdPrice }}</div>
@@ -118,6 +118,11 @@ export default {
         this.allValue += list[i].newValue;
         this.allDelta += list[i].delta;
       }
+    },
+    jump2Stock: function(id) {
+      this.$router.push({
+        path: "/stock/" + id
+      });
     }
   }
 }

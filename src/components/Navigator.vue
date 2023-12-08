@@ -46,6 +46,7 @@ export default {
     return {
       navigatorList: [
         { title: "主页", link: "/home" },
+        { title: "总览", link: "/fullView" },
         { title: "新闻", link: "/news" },
         { title: "帮助", link: "/help" },
         { title: "关于", link: "/about" }

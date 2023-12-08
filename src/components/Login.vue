@@ -19,10 +19,30 @@
       </div>
     </div>
   </div>
+  <el-dialog title="登录出错！" id="error" v-model="isVisible" width="50%" height="50%">
+    <div style="text-align: center;">
+      <p>{{ information }}</p>
+      <button v-if="isDebugUseful" class="ui button" @click="debug">离线Debug</button>
+      <button class="ui button" @click="quit">确定</button>
+    </div>
+  </el-dialog>
+  <el-dialog title="登录成功！" id="error" v-model="isSuccess" width="30%" height="50%">
+    <div style="text-align: center;">
+      <p>即将自动跳转至用户主页...</p>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
 export default {
+  data: function() {
+    return {
+      information: "",
+      isVisible: false,
+      isDebugUseful: false,
+      isSuccess: false
+    }
+  },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
     if (userId) {
@@ -37,13 +57,12 @@ export default {
       let password = document.getElementById("password").value;
       let self = this;
       if (username.length == 0) {
-        alert("用户名不能为空！");
+        this.showError("用户名不能为空！");
         return;
       } else if (password.length == 0) {
-        alert("密码不能为空！");
+        this.showError("密码不能为空！");
         return;
       }
-
       const formData = new FormData();
       formData.append("username", username);
       formData.append("password", password);
@@ -52,24 +71,36 @@ export default {
         url: "/user/login",
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(function(res) {
+        res = res.data;
+        let success = res.success;
+        if (!success) {
+          self.showError(res.message);
+          return;
+        }
+        self.isSuccess = true;
+        window.sessionStorage.setItem("userId", res.userId);
+        window.sessionStorage.setItem("user", username);
+        setTimeout(function() {
+          self.$router.push({path: '/userMain'});
+        }, 2000);
+      }).catch(function(err) {
+        self.showError("登录时遇到错误：" + err);
+        self.isDebugUseful = true;
       })
-        .then(function(res) {
-          res = res.data;
-          let success = res.success;
-          if (!success) {
-            alert(res.message);
-            return;
-          }
-          window.sessionStorage.setItem("userId", res.userId);
-          window.sessionStorage.setItem("user", username);
-          self.$router.push({path: '/userMain'});
-        })
-        .catch(function(err) {
-          alert("登录时遇到错误：" + err);
-          window.sessionStorage.setItem("userId", "233");
-          window.sessionStorage.setItem("user", "666");
-          self.$router.push({path: '/userMain'});
-        })
+    },
+    showError: function(word) {
+      this.information = word;
+      this.isVisible = true;
+    },
+    debug: function() {
+      window.sessionStorage.setItem("userId", "233");
+      window.sessionStorage.setItem("user", "666");
+      this.$router.push({path: '/userMain'});
+    },
+    quit: function() {
+      this.isVisible = false;
+      this.isDebugUseful = false;
     }
   }
 }

@@ -17,6 +17,7 @@ import SimulateHold from "../views/SimulateHold.vue"
 import SimulateQuery from "../views/SimulateQuery.vue"
 import UserMain from "../views/UserMain.vue"
 import Test from "../views/TestView.vue"
+import FullView from "../views/FullView.vue"
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -84,9 +85,14 @@ const router = createRouter({
     {
       path: "/userMain",
       component: UserMain
-    },{
-      path:'/test',
-      component:Test
+    },
+    {
+      path: "/test",
+      component: Test
+    },
+    {
+      path: "/fullView",
+      component: FullView
     }
   ]
 })

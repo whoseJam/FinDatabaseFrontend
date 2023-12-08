@@ -25,17 +25,17 @@
           <tr v-for="item in focusList">
             <td>
               <div class="vertical masthead segment">
-                <div>{{ item.name }}</div>
-                <div>{{ item.code }}</div>
+                <div @click="jump2Stock(item.code)">{{ item.name }}</div>
+                <div @click="jump2Stock(item.code)">{{ item.code }}</div>
               </div>
             </td>
-            <td :style="computeStyle(item.deltaRate)">
+            <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
               {{ item.newPrice }}
             </td>
-            <td :style="computeStyle(item.deltaRate)">
+            <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
               {{ item.deltaRate }}%
             </td>
-            <td :style="computeStyle(item.deltaRate)">
+            <td :style="computeStyle(item.deltaRate)" @click="jump2Stock(item.code)">
               {{ item.delta }}
             </td>
             <td >
@@ -135,12 +135,34 @@ export default {
       pie.setOption(optionP, true);
     },
     buy: function(stockId) {
-      stockId = stockId.substring(2);
       this.$router.push({path: '/simulateBuy', query: {id: stockId}});
     },
     remove: function(stockId) {
-      alert("还没写：似乎没找到后端的对应接口");
-      location.reload();
+      const newdata = new FormData();
+      let userId = window.sessionStorage.getItem("userId");
+      newdata.append("userId", userId);
+      newdata.append("stockId", stockId);
+      this.$http({
+        method: 'post',
+        url: '/user/deletefavor',
+        data: newdata,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(function(res) {
+        res = res.data;
+        if (res.success) {
+          alert("删除成功！");
+          location.reload();
+        } else {
+          alert("删除失败！");
+        }
+      }).catch(function(err) {
+        alert("发生错误：" + err);
+      });
+    },
+    jump2Stock: function(id) {
+      this.$router.push({
+        path: "/stock/" + id
+      });
     }
   }
 }

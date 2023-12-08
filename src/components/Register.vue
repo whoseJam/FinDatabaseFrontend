@@ -37,6 +37,17 @@
       </div>
     </div>
   </div>
+  <el-dialog title="注册出错！" id="error" v-model="isVisible" width="50%" height="50%">
+    <div style="text-align: center;">
+      <p>{{ information }}</p>
+      <button class="ui button" @click="quit">确定</button>
+    </div>
+  </el-dialog>
+  <el-dialog title="注册成功！" id="error" v-model="isSuccess" width="30%" height="50%">
+    <div style="text-align: center;">
+      <p>即将自动跳转至登录页面...</p>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -63,7 +74,10 @@ export default {
       word = "" + tmp1 + " / " + tmp2 + " = ？（取整数部分）"
     }
     return {
-      question: word
+      question: word,
+      information: "",
+      isVisible: false,
+      isSuccess: false,
     }
   },
   methods: {
@@ -75,25 +89,25 @@ export default {
       let agree = document.getElementById("agree");
       let code = document.getElementById("code").value;
       if (!agree.checked) {
-        alert("请阅读并勾选同意《股票查询及模拟交易平台使用说明》");
+        this.showError("请阅读并勾选同意《股票查询及模拟交易平台使用说明》");
         return;
       } else if (username.length == 0) {
-        alert("用户名不能为空！");
+        this.showError("用户名不能为空！");
         return;
       } else if (password !== confirm) {
-        alert("密码与确认密码不一致");
+        this.showError("密码与确认密码不一致");
         return;
       } else if (password.length == 0) {
-        alert("密码不能为空！");
+        this.showError("密码不能为空！");
         return;
       } else if (password.length < 8) {
-        alert("密码过短！密码长度应介于8-20位之间。");
+        this.showError("密码过短！密码长度应介于8-20位之间。");
         return;
       } else if (password.length > 20) {
-        alert("密码过长！密码长度应介于8-20位之间。");
+        this.showError("密码过长！密码长度应介于8-20位之间。");
         return;
       } else if (answer != code) {
-        alert("验证码错误！");
+        this.showError("验证码错误！");
         return;
       }
       let self = this;
@@ -107,21 +121,26 @@ export default {
         url: '/user/register',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(function(res) {
+        res = res.data;
+        if (!res.success) {
+          self.showError(res.message);
+          return;
+        }
+        self.isSuccess = true;
+        setTimeout(function() {
+          self.$router.push({path: '/login'});
+        }, 2000);
+      }).catch(function(err) {
+        self.showError(err);
       })
-        .then(function(res) {
-          res = res.data;
-          if (!res.success) {
-            alert(res.message);
-            return;
-          }
-          alert(res.message);
-          setTimeout(function() {
-            self.$router.push({path: '/login'});
-          }, 3000);
-        })
-        .catch(function(err) {
-          alert(err);
-        })
+    },
+    showError: function(word) {
+      this.information = word;
+      this.isVisible = true;
+    },
+    quit: function() {
+      this.isVisible = false;
     }
   }
 }

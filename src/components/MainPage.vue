@@ -10,7 +10,7 @@
           </h1>
 
           <h2 class="ui large header">搜索你想要查询的股票</h2>
-          
+
           <div class="ui search">
             <i class="search icon"></i>
             <div class="ui input">
@@ -22,6 +22,7 @@
 
         <div class="ui segment">
           <div class="ui header">昨日表现最佳股票</div>
+          <div style="color: gray;">点击以查看详细信息</div>
           <table class="ui single line table">
             <thead>
               <tr>
@@ -32,12 +33,12 @@
             </thead>
             <tbody>
               <tr v-for="item in topkList">
-                <td>{{ item.name }}</td>
-                <td>{{ item.code }}</td>
-                <td>{{ item.deltaRate }}</td>
+                <td @click="jump2Stock(item.code)">{{ item.name }}</td>
+                <td @click="jump2Stock(item.code)">{{ item.code }}</td>
+                <td @click="jump2Stock(item.code)">{{ item.deltaRate }}</td>
               </tr>
             </tbody>
-          </table>          
+          </table>
         </div>
 
       </div>
@@ -85,6 +86,11 @@ export default {
       let stockId = document.getElementById("stockId").value;
       this.$router.push({
         path: "/stock/" + stockId
+      });
+    },
+    jump2Stock: function(id) {
+      this.$router.push({
+        path: "/stock/" + id
       });
     }
   }

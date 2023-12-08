@@ -20,7 +20,7 @@
         <h3 class="ui header">
           我的自选
           <button class="ui button" type="button" style="position:relative; left:10%" @click="setData(this.focusList)">换一个</button>
-          <button class="ui button" type="button" style="position:relative; left:15%" @click="jump2Stock">总览</button>
+          <button class="ui button" type="button" style="position:relative; left:15%" @click="jump2MyStock">总览</button>
         </h3>
         <table class="ui unstackable table">
         <thead>
@@ -35,17 +35,17 @@
           <tr>
             <td>
               <div class="vertical masthead segment">
-                <div>{{ name }}</div>
-                <div>{{ code }}</div>
+                <div @click="jump2Stock(code)">{{ name }}</div>
+                <div @click="jump2Stock(code)">{{ code }}</div>
               </div>
             </td>
-            <td :style="computeStyle(deltaRate)">
+            <td :style="computeStyle(deltaRate)" @click="jump2Stock(code)">
               {{ newPrice }}
             </td>
-            <td :style="computeStyle(deltaRate)">
+            <td :style="computeStyle(deltaRate)" @click="jump2Stock(code)">
               {{ deltaRate }}%
             </td>
-            <td :style="computeStyle(deltaRate)">
+            <td :style="computeStyle(deltaRate)" @click="jump2Stock(code)">
               {{ delta }}
             </td>
           </tr>
@@ -76,7 +76,7 @@
       <div class="upload"><button class="ui button" @click="upload">上传</button></div>
     </div>
   </el-dialog>
-  <el-dialog id="uploadDialog" v-model="isUploadVisible" width="70%" height="50%">
+  <el-dialog title="头像上传" id="uploadDialog" v-model="isUploadVisible" width="70%" height="50%">
     <el-upload class="upload-demo" action="" drag :auto-upload="false" :show-file-list="false" :on-change='changeUpload'>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">点击上传</div>
@@ -178,7 +178,7 @@ export default {
       alert("已成功退出登录！")
       this.$router.push({path: '/'});
     },
-    jump2Stock: function() {
+    jump2MyStock: function() {
       this.$router.push({path: '/myStock'});
     },
     jump2Simulate: function() {
@@ -268,7 +268,8 @@ export default {
             alert("头像更改成功！")
             self.isCropVisible = false;
             self.isUploadVisible = false;
-            const newdata = new FormData()
+            location.reload();
+            /*const newdata = new FormData()
             newdata.append("userId", self.userId)
             self.$http({
               method: 'post',
@@ -281,12 +282,17 @@ export default {
               console.log(self.photoUrl)
             }).catch(function(err) {
               alert("发生错误：" + err);
-            })
+            })*/
           }
         }).catch(function(err) {
           alert("发生错误：" + err);
         })
       })
+    },
+    jump2Stock: function(id) {
+      this.$router.push({
+        path: "/stock/" + id
+      });
     }
   }
 }

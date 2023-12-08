@@ -2,18 +2,17 @@
     <div class="ui container">
       <div class="ui vertical masthead segment">
         <h1 class="ui header">
-          查询操作说明
+          基本查询操作说明
         </h1>
 
         <div class="ui segment">
           <h3 class="ui header">个股查询操作</h3>
-          <p>To be continued...</p>
+          <p>进入主页，在搜索框中输入希望查询的股票代码，点击搜索按钮即可获得相应的股票信息。</p>
         </div>
 
         <div class="ui segment">
-          <h3 class="ui header">股票信息总览及新闻查看</h3>
-          <p><b>股票信息总览</b>：To be continued...</p>
-          <p><b>股票新闻查看</b>：To be continued...</p>
+          <h3 class="ui header">股市新闻查看</h3>
+          <p>点击导航栏中的“新闻”选项，系统会自动查询并返回最近值得关注的市场新闻信息。</p>
         </div>
 
         <h1 class="ui header">
