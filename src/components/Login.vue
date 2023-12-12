@@ -78,6 +78,20 @@ export default {
           self.showError(res.message);
           return;
         }
+        const newdata = new FormData();
+        newdata.append("userId", id);
+        self.$http({
+          method: 'post',
+          url: 'user/getPhoto',
+          data: newdata,
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }).then(function(res) {
+          res = res.data;
+          window.sessionStorage.setItem("photo", res.image_url);
+        })
+        .catch(function(err) {
+          window.sessionStorage.setItem("photo", "src/test.png");
+        });
         self.isSuccess = true;
         window.sessionStorage.setItem("userId", res.userId);
         window.sessionStorage.setItem("user", username);
@@ -96,6 +110,7 @@ export default {
     debug: function() {
       window.sessionStorage.setItem("userId", "233");
       window.sessionStorage.setItem("user", "666");
+      window.sessionStorage.setItem("photo", "src/test.png");
       this.$router.push({path: '/userMain'});
     },
     quit: function() {

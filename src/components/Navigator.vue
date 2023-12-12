@@ -63,10 +63,11 @@ export default {
   mounted: function() {
     this.user = window.sessionStorage.getItem("user");
     let id = window.sessionStorage.getItem("userId");
+    this.photoUrl = window.sessionStorage.getItem("photo");
     let self = this;
     console.log("user=", this.user);
     if (!this.user) this.user = null;
-    else {
+    /*else {
       const newdata = new FormData();
       newdata.append("userId", id);
       this.$http({
@@ -82,7 +83,8 @@ export default {
       .catch(function(err) {
         alert("发生错误：" + err);
         self.photoUrl = "src/test.png"
-    });}
+      });
+    }*/
   },
   methods: {
     itemClasses: function(myItem) {
@@ -94,7 +96,7 @@ export default {
       window.sessionStorage.removeItem("user");
       alert("已成功退出登录！")
       this.$router.push({path: '/'});
-      location.reload();
+      //location.reload();
     }
   }
 }

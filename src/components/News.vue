@@ -19,13 +19,21 @@
       </div>
     </div>
   </div>
+  <el-dialog :title="infoTitle" v-model="isInfoVisible" width="30%" height="50%">
+    <div style="text-align: center;">
+      <p>{{ info }}</p>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
 export default {
   data: function() {
     return {
-      articles: []
+      articles: [],
+      isInfoVisible: false,
+      infoTitle: "",
+      info: ""
     }
   },
   mounted: function() {
@@ -37,7 +45,7 @@ export default {
         self.articles = data;
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("发生错误", err);
         self.articles = [
           {
             "title": "扁鹊医书如何重现于世？穿越千年走近“天回医简” ",
@@ -51,6 +59,13 @@ export default {
           }
         ]
       })
+  },
+  methods: {
+    infoAlert: function(title, word) {
+      this.infoTitle = title;
+      this.info = word;
+      this.isInfoVisible = true;
+    }
   }
 }
 </script>

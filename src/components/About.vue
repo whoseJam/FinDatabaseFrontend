@@ -29,9 +29,10 @@
 
       <div class="ui segment">
         <h3 class="ui header">制作者名单 & 联系我们</h3>
-        <p><b>组长 & 数据库设计 & 设计文档</b>：a</p>
-        <p><b>前端主体</b>：b</p>
-        <p><b>后端主体</b>：c</p>
+        <p><b>组长</b>：刘博恺</p>
+        <p><b>前端</b>：胡诗杰、刘博恺</p>
+        <p><b>后端</b>：邓韬</p>
+        <p><b>数据库 & 设计文档</b>：全体组员</p>
         <p><b>项目仓库</b>：<a href="https://github.com/whoseJam/FinDatabaseFrontend">GitHub</a></p>
       </div>
     </div>

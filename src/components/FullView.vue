@@ -16,7 +16,7 @@
                             <form class="ui form" @submit.native.prevent>
                                 <div class="field">
                                     <label>页面号（Enter跳转）</label>
-                                    <input id="turn" type="text" name="turn" @keyup.enter="turnPage" style="width: 30%" />
+                                    <input id="turn" type="text" name="turn" @keyup.enter="turnPage" style="width: 40%" />
                                 </div>
                             </form>
                             </div>
@@ -75,6 +75,11 @@
         </table>
         </div>
     </div>
+    <el-dialog :title="infoTitle" v-model="isInfoVisible" width="30%" height="50%">
+        <div style="text-align: center;">
+            <p>{{ info }}</p>
+        </div>
+    </el-dialog>
 </template>
 
 <script>
@@ -89,6 +94,9 @@ export default {
             showAfter: true,
             showPage: true,
             showTurn: false,
+            isInfoVisible: false,
+            infoTitle: "",
+            info: "",
             list: []
         }
     },
@@ -112,7 +120,7 @@ export default {
                 res = res.data;
                 self.list = res;
             }).catch(function(err) {
-                alert(err);
+                self.infoAlert("发生错误", err);
                 self.list = [
                 {stockName: "测试例一", stockId: "000001", newPrice: 3.45, high: 3.55, low: 3.2, deltaRate: 10.00},
                 {stockName: "测试例二", stockId: "000002", newPrice: 5.75, high: 5.85, low: 5.65, deltaRate: 0.00},
@@ -160,6 +168,11 @@ export default {
                     this.changePage(value - this.page);
                 }
             }
+        },
+        infoAlert: function(title, word) {
+            this.infoTitle = title;
+            this.info = word;
+            this.isInfoVisible = true;
         }
     }
 }

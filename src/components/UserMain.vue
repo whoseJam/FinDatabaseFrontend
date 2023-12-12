@@ -83,6 +83,11 @@
         <div class="el-upload__tip">支持绝大多数图片格式，单张图片最大支持5MB</div>
     </el-upload>
   </el-dialog>
+  <el-dialog :title="infoTitle" v-model="isInfoVisible" width="30%" height="50%">
+    <div style="text-align: center;">
+      <p>{{ info }}</p>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -90,11 +95,7 @@ export default {
   data: function() {
       let user = window.sessionStorage.getItem("user");
       let id = window.sessionStorage.getItem("userId");
-      if (!id) {
-        alert("请先登录！");
-        this.$router.push({path: '/login'});
-        return;
-      }
+      let url = window.sessionStorage.getItem("photo");
       return {
           username: user,
           userId: id,
@@ -108,12 +109,22 @@ export default {
           allDelta: null,
           isUploadVisible: false,
           isCropVisible: false,
-          photoUrl: "",
+          isInfoVisible: false,
+          photoUrl: url,
+          infoTitle: "",
+          info: ""
       }
   },
   mounted: function() {
     let userId = window.sessionStorage.getItem("userId");
     let self = this;
+    if (!userId) {
+      this.infoAlert("尚未登录", "请先登录！");
+      setTimeout(function() {
+        self.$router.push({path: '/login'});
+      }, 2000);
+      return;
+    }
     const newdata = new FormData();
     newdata.append("userId", userId);
     this.$http({
@@ -126,7 +137,7 @@ export default {
       self.photoUrl = res.image_url
       console.log(self.photoUrl)
     }).catch(function(err) {
-      alert("发生错误：" + err);
+      self.infoAlert("发生错误", err);
       self.photoUrl = "src/test.png"
     });
     this.$http
@@ -137,7 +148,7 @@ export default {
         self.setData(self.focusList);
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("发生错误", err);
         self.focusList = [
           { name: "富春股份", code: "SZ300299", newPrice: 6.62, deltaRate: -7.76, delta: -0.55 },
           { name: "永泰能源", code: "SH600157", newPrice: 1.36, deltaRate: 0.00, delta: 0.00 },
@@ -153,7 +164,7 @@ export default {
         self.allBalance = res.balance;
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("发生错误", err);
         self.allBalance = 484300;
       });
     this.$http
@@ -164,7 +175,7 @@ export default {
         self.setUseful(self.holdList);
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("发生错误", err);
         self.holdList = [
           { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
         ]
@@ -175,9 +186,11 @@ export default {
     logoff: function() {
       window.sessionStorage.removeItem("userId");
       window.sessionStorage.removeItem("user");
-      alert("已成功退出登录！")
-      this.$router.push({path: '/'});
-      location.reload();
+      this.infoAlert("退出登录", "已成功退出登录！即将跳转回主页...")
+      let self = this;
+      setTimeout(function() {
+        self.$router.push({path: '/'});
+      }, 2000);
     },
     jump2MyStock: function() {
       this.$router.push({path: '/myStock'});
@@ -266,27 +279,28 @@ export default {
         }).then(function (res) {
           res = res.data;
           if (res.success) {
-            alert("头像更改成功！")
-            self.isCropVisible = false;
-            self.isUploadVisible = false;
-            location.reload();
-            /*const newdata = new FormData()
-            newdata.append("userId", self.userId)
+            const newdata = new FormData();
+            newdata.append("userId", id);
             self.$http({
               method: 'post',
               url: 'user/getPhoto',
               data: newdata,
               headers: { 'Content-Type': 'multipart/form-data' }
-            }).then(function (res) {
-              res = res.data
-              self.photoUrl = res.image_url
-              console.log(self.photoUrl)
+            }).then(function(res) {
+              res = res.data;
+              window.sessionStorage.setItem("photo", res.image_url);
             }).catch(function(err) {
-              alert("发生错误：" + err);
-            })*/
+              window.sessionStorage.setItem("photo", "src/test.png");
+            });
+            self.infoAlert("头像修改", "头像修改成功！即将自动刷新...");
+            self.isCropVisible = false;
+            self.isUploadVisible = false;
+            setTimeout(function() {
+              location.reload();
+            }, 2000);
           }
         }).catch(function(err) {
-          alert("发生错误：" + err);
+          self.infoAlert("发生错误", err);
         })
       })
     },
@@ -294,6 +308,11 @@ export default {
       this.$router.push({
         path: "/stock/" + id
       });
+    },
+    infoAlert: function(title, word) {
+      this.infoTitle = title;
+      this.info = word;
+      this.isInfoVisible = true;
     }
   }
 }

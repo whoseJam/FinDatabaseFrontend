@@ -44,7 +44,11 @@
       </div>
     </div>
   </div>
-
+  <el-dialog :title="infoTitle" v-model="isInfoVisible" width="30%" height="50%">
+    <div style="text-align: center;">
+      <p>{{ info }}</p>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -55,7 +59,10 @@ function isDigit(ch) {
 export default {
   data: function() {
     return {
-      topkList: []
+      topkList: [],
+      isInfoVisible: false,
+      infoTitle: "",
+      info: ""
     };
   },
   mounted: function() {
@@ -67,7 +74,7 @@ export default {
         self.topkList = res;
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("发生错误", err);
         self.topkList = [
           { "name": "富春股份", "code": "SZ300299", "deltaRate": -7.76 },
           { "name": "永泰能源", "code": "SH600157", "deltaRate": 0 },
@@ -92,6 +99,11 @@ export default {
       this.$router.push({
         path: "/stock/" + id
       });
+    },
+    infoAlert: function(title, word) {
+      this.infoTitle = title;
+      this.info = word;
+      this.isInfoVisible = true;
     }
   }
 }
