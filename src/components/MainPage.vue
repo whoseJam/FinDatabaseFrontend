@@ -91,6 +91,10 @@ export default {
     },
     searchStock: function() {
       let stockId = document.getElementById("stockId").value;
+      if (!this.checkValid(stockId)) {
+        this.infoAlert("发生错误", "股票代码不合法，请检查后再试！");
+        return;
+      }
       this.$router.push({
         path: "/stock/" + stockId
       });

@@ -1,4 +1,3 @@
-
 <template>
   <div class="ui container">
     <div class="ui vertical masthead segment">

@@ -39,8 +39,8 @@
               {{ item.delta }}
             </td>
             <td >
-              <button class="ui button" type="button" style="width: 40%;" @click="buy(item.code)">委托买入</button>
-              <button class="ui button" type="button" style="width: 40%;" @click="remove(item.code)">移出自选</button>
+              <button class="ui primary button" type="button" style="width: 40%;" @click="buy(item.code)">委托买入</button>
+              <button class="ui negative button" type="button" style="width: 40%;" @click="remove(item.code)">移出自选</button>
             </td>
           </tr>
         </tbody>

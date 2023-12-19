@@ -18,6 +18,7 @@ import SimulateQuery from "../views/SimulateQuery.vue"
 import UserMain from "../views/UserMain.vue"
 import Test from "../views/TestView.vue"
 import FullView from "../views/FullView.vue"
+import Admin from "../views/Admin.vue"
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -93,6 +94,10 @@ const router = createRouter({
     {
       path: "/fullView",
       component: FullView
+    },
+    {
+      path: "/admin/:type",
+      component: Admin
     }
   ]
 })

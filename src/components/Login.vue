@@ -22,7 +22,8 @@
   <el-dialog title="登录出错！" id="error" v-model="isVisible" width="50%" height="50%">
     <div style="text-align: center;">
       <p>{{ information }}</p>
-      <button v-if="isDebugUseful" class="ui button" @click="debug">离线Debug</button>
+      <button v-if="isDebugUseful" class="ui button" @click="debug(false)">离线Debug</button>
+      <button v-if="isDebugUseful" class="ui button" @click="debug(true)">离线管理员Debug</button>
       <button class="ui button" @click="quit">确定</button>
     </div>
   </el-dialog>
@@ -107,10 +108,11 @@ export default {
       this.information = word;
       this.isVisible = true;
     },
-    debug: function() {
+    debug: function(isAdmin) {
       window.sessionStorage.setItem("userId", "233");
       window.sessionStorage.setItem("user", "666");
       window.sessionStorage.setItem("photo", "src/test.png");
+      window.sessionStorage.setItem("isAdmin", isAdmin);
       this.$router.push({path: '/userMain'});
     },
     quit: function() {

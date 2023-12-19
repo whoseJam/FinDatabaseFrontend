@@ -25,6 +25,7 @@
             <router-link class="item" to="/userMain">用户主页</router-link>
             <router-link class="item" to="/myStock">自选</router-link>
             <router-link class="item" to="/simulate">模拟盘</router-link>
+            <router-link class="item" to="/admin/0" v-if="isAdmin">管理操作</router-link>
             <router-link class="item" to="/" @click="logoff">注销</router-link>
           </div>
         </div>
@@ -52,7 +53,8 @@ export default {
         { title: "关于", link: "/about" }
       ],
       user: null,
-      photoUrl: ""
+      photoUrl: "",
+      isAdmin: false
     }
   },
   props: {
@@ -64,27 +66,9 @@ export default {
     this.user = window.sessionStorage.getItem("user");
     let id = window.sessionStorage.getItem("userId");
     this.photoUrl = window.sessionStorage.getItem("photo");
-    let self = this;
+    this.isAdmin = (window.sessionStorage.getItem("isAdmin") == "true");
     console.log("user=", this.user);
     if (!this.user) this.user = null;
-    /*else {
-      const newdata = new FormData();
-      newdata.append("userId", id);
-      this.$http({
-        method: 'post',
-        url: 'user/getPhoto',
-        data: newdata,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }).then(function(res) {
-        res = res.data
-        self.photoUrl = res.image_url
-        console.log(self.photoUrl)
-      })
-      .catch(function(err) {
-        alert("发生错误：" + err);
-        self.photoUrl = "src/test.png"
-      });
-    }*/
   },
   methods: {
     itemClasses: function(myItem) {

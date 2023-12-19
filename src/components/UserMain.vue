@@ -13,10 +13,10 @@
           <p style="font-size: 24px;"><b>{{ username }}</b></p>
           <p style="color: gray">用户ID：{{ userId }}</p>
         </div>
-        <button class="ui button" type="button" @click="showUpload" style="position: absolute; left: 40%; top:85%">设置头像</button>
-        <button class="ui button" type="button" @click="logoff" style="position: absolute; left: 70%; top:85%">退出登录</button>
+        <button class="ui primary button" type="button" @click="showUpload" style="position: absolute; left: 40%; top:85%">设置头像</button>
+        <button class="ui negative button" type="button" @click="logoff" style="position: absolute; left: 70%; top:85%">退出登录</button>
       </div>
-      <div class="ui segment" style="float:left; width: 60%; height:200px">
+      <div class="ui segment" style="float:left; width: 60%; height:200px" v-if="!isAdmin">
         <h3 class="ui header">
           我的自选
           <button class="ui button" type="button" style="position:relative; left:10%" @click="setData(this.focusList)">换一个</button>
@@ -52,7 +52,7 @@
         </tbody>
       </table>
       </div>
-      <div class="ui segment" style="float:left; width: 60%; height:175px">
+      <div class="ui segment" style="float:left; width: 60%; height:175px" v-if="!isAdmin">
         <h3 class="ui header">
           我的模拟
           <button class="ui button" type="button" style="position:relative; left:10%" @click="jump2Simulate">详情</button>
@@ -63,6 +63,17 @@
           <p>当前总盈亏：
             <span :style="computeStyle(allDelta)"><b>{{ allDelta }}</b></span>
           </p>
+        </div>
+      </div>
+      <div class="ui segment" style="float:left; width: 60%; height:400px" v-if="isAdmin">
+        <h3 class="ui header">
+          管理员操作
+        </h3>
+        <div style="text-align: center;">
+          <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(0)">用户信息管理</button></p>
+          <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(1)">用户资金管理</button></p>
+          <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(2)">查询上线记录</button></p>
+          <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(3)">查询交易记录</button></p>
         </div>
       </div>
     </div>
@@ -96,6 +107,8 @@ export default {
       let user = window.sessionStorage.getItem("user");
       let id = window.sessionStorage.getItem("userId");
       let url = window.sessionStorage.getItem("photo");
+      let isAdmin = (window.sessionStorage.getItem("isAdmin") == "true");
+      console.log(isAdmin);
       return {
           username: user,
           userId: id,
@@ -112,7 +125,8 @@ export default {
           isInfoVisible: false,
           photoUrl: url,
           infoTitle: "",
-          info: ""
+          info: "",
+          isAdmin: isAdmin,
       }
   },
   mounted: function() {
@@ -125,62 +139,49 @@ export default {
       }, 2000);
       return;
     }
-    const newdata = new FormData();
-    newdata.append("userId", userId);
-    this.$http({
-      method: 'post',
-      url: 'user/getPhoto',
-      data: newdata,
-      headers: { 'Content-Type': 'multipart/form-data' }
-    }).then(function(res) {
-      res = res.data
-      self.photoUrl = res.image_url
-      console.log(self.photoUrl)
-    }).catch(function(err) {
-      self.infoAlert("发生错误", err);
-      self.photoUrl = "src/test.png"
-    });
-    this.$http
-      .post("/user/favor/" + userId)
-      .then(function(res) {
-        res = res.data;
-        self.focusList = res;
-        self.setData(self.focusList);
-      })
-      .catch(function(err) {
-        self.infoAlert("发生错误", err);
-        self.focusList = [
-          { name: "富春股份", code: "SZ300299", newPrice: 6.62, deltaRate: -7.76, delta: -0.55 },
-          { name: "永泰能源", code: "SH600157", newPrice: 1.36, deltaRate: 0.00, delta: 0.00 },
-          { name: "白云机场", code: "SH600004", newPrice: 10.63, deltaRate: 0.85, delta: 0.09 },
-          { name: "浦发银行", code: "SH600000", newPrice: 6.89, deltaRate: -0.72, delta: -0.05 }
-        ];
-        self.setData(self.focusList);
-      });
-    this.$http
-      .post("/user/balance/" + userId)
-      .then(function(res) {
-        res = res.data;
-        self.allBalance = res.balance;
-      })
-      .catch(function(err) {
-        self.infoAlert("发生错误", err);
-        self.allBalance = 484300;
-      });
-    this.$http
-      .post("/user/simulate/hold/" + userId)
-      .then(function(res) {
-        res = res.data;
-        self.holdList = res;
-        self.setUseful(self.holdList);
-      })
-      .catch(function(err) {
-        self.infoAlert("发生错误", err);
-        self.holdList = [
-          { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
-        ]
-        self.setUseful(self.holdList);
-      })
+    if (!this.isAdmin) {
+      this.$http
+        .post("/user/favor/" + userId)
+        .then(function(res) {
+          res = res.data;
+          self.focusList = res;
+          self.setData(self.focusList);
+        })
+        .catch(function(err) {
+          self.infoAlert("发生错误", err);
+          self.focusList = [
+            { name: "富春股份", code: "SZ300299", newPrice: 6.62, deltaRate: -7.76, delta: -0.55 },
+            { name: "永泰能源", code: "SH600157", newPrice: 1.36, deltaRate: 0.00, delta: 0.00 },
+            { name: "白云机场", code: "SH600004", newPrice: 10.63, deltaRate: 0.85, delta: 0.09 },
+            { name: "浦发银行", code: "SH600000", newPrice: 6.89, deltaRate: -0.72, delta: -0.05 }
+          ];
+          self.setData(self.focusList);
+        });
+      this.$http
+        .post("/user/balance/" + userId)
+        .then(function(res) {
+          res = res.data;
+          self.allBalance = res.balance;
+        })
+        .catch(function(err) {
+          self.infoAlert("发生错误", err);
+          self.allBalance = 484300;
+        });
+      this.$http
+        .post("/user/simulate/hold/" + userId)
+        .then(function(res) {
+          res = res.data;
+          self.holdList = res;
+          self.setUseful(self.holdList);
+        })
+        .catch(function(err) {
+          self.infoAlert("发生错误", err);
+          self.holdList = [
+            { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
+          ]
+          self.setUseful(self.holdList);
+        })
+    }
   },
   methods: {
     logoff: function() {
@@ -197,6 +198,9 @@ export default {
     },
     jump2Simulate: function() {
       this.$router.push({path: '/simulate'});
+    },
+    jump2Admin: function(num) {
+      this.$router.push({path: '/admin/' + num});
     },
     computeStyle: function(delta) {
       let eps = 1e-4;
