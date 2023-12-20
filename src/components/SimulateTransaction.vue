@@ -86,7 +86,7 @@ export default {
       }
 
       this.$http
-        .post("/stock/order", {
+        .post("/user/order", {
           userId: userId,
           stockId: stockId,
           action: action,

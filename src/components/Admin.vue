@@ -369,6 +369,8 @@ export default {
                 .then(function(res) {
                     res = res.data;
                     self.infoList = res;
+                    for (let i = 0; i < self.infoList.length; i++)
+                        self.infoList[i].timeSimulate *= 1000;
                     self.callData(1);
                 })
                 .catch(function(err) {

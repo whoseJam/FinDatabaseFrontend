@@ -285,10 +285,10 @@ export default {
           res = res.data;
           if (res.success) {
             const newdata = new FormData();
-            newdata.append("userId", id);
+            newdata.append("userId", self.userId);
             self.$http({
               method: 'post',
-              url: 'user/getPhoto',
+              url: '/user/getPhoto',
               data: newdata,
               headers: { 'Content-Type': 'multipart/form-data' }
             }).then(function(res) {
