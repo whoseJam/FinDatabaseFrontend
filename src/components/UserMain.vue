@@ -273,7 +273,8 @@ export default {
         console.log(blob);
         const data = new FormData();
         let self = this;
-        data.append("photo", blob, '1.jpg');
+        let name = "" + self.userId + ".jpg";
+        data.append("photo", blob, name);
         data.append("userId", self.userId);
         this.$http({
           method: 'post',
