@@ -4,7 +4,6 @@
             <div class="ui vertical basic buttons" style="float: left; width: 15%">
                 <button :class="classList[0]" @click="menuClick(0)">用户信息管理</button>
                 <button :class="classList[1]" @click="menuClick(1)">用户资金管理</button>
-                <button :class="classList[2]" @click="menuClick(2)">查询上线记录</button>
                 <button :class="classList[3]" @click="menuClick(3)">查询交易记录</button>
             </div>
             <div class="ui segment" v-if="(nowActive == 0 && isAdmin)" style="float: left; width: 80%; left: 5%">
@@ -189,12 +188,7 @@
                 <td v-if="item != undefined">{{ item.id }}</td>
                 <td v-if="item != undefined">{{ getDateString(item.timeSimulate) }}</td>
                 <td v-if="item != undefined">{{ item.userid }}</td>
-                <td v-if="item != undefined">
-                    <div class="vertical masthead segment">
-                        <div>{{ item.action }}</div>
-                        <div>{{ item.type }}</div>
-                    </div>
-                </td>
+                <td v-if="item != undefined">{{ item.action }}</td>
                 <td v-if="item != undefined">{{ item.stock }}</td>
                 <td v-if="item != undefined">
                     <div class="vertical masthead segment">
@@ -281,6 +275,7 @@ export default {
             showAfter: true,
             showPage: true,
             showTurn: false,
+            tmpArgument: "",
         }
     },
     mounted: function() {
@@ -292,7 +287,6 @@ export default {
             }, 2000);
             return;
         }
-        this.showError("接口还没写：本页所有内容均为样例数据...");
         this.nowActive = this.$route.params.type;
         for (var i = 0; i < 4; i++) {
             if (i == this.nowActive) {
@@ -319,37 +313,59 @@ export default {
         },
         getInfo: function(num) {
             //  等待接口完成，此处为测试用例
+            let self = this;
             if (num == 0) {
-                this.infoList = [
-                    {id: "1", name: "42号混凝土", photoUrl: "src/test.png"},
-                    {id: "2", name: "Furina", photoUrl: "src/test.png"},
-                    {id: "3", name: "救命，手机在自动下载元梦之星", photoUrl: "src/test.png"},
-                    {id: "4", name: "数据库有点太城市化了", photoUrl: "src/test.png"},
-                    {id: "5", name: "1145141919810", photoUrl: "src/test.png"},
-                    {id: "6", name: "花开富贵", photoUrl: "src/test.png"},
-                ]
+                this.$http
+                .post("/admin/list")
+                .then(function(res) {
+                    res = res.data;
+                    self.infoList = res;
+                    self.callData(1);
+                })
+                .catch(function(err) {
+                    self.showError(err);
+                    self.infoList = [
+                        {id: "1", name: "42号混凝土", photoUrl: "src/test.png"},
+                        {id: "2", name: "Furina", photoUrl: "src/test.png"},
+                        {id: "3", name: "救命，手机在自动下载元梦之星", photoUrl: "src/test.png"},
+                        {id: "4", name: "数据库有点太城市化了", photoUrl: "src/test.png"},
+                        {id: "5", name: "1145141919810", photoUrl: "src/test.png"},
+                        {id: "6", name: "花开富贵", photoUrl: "src/test.png"},
+                    ]
+                    self.callData(1);
+                });
             } else if (num == 1) {
-                this.infoList = [
-                    {id: "1", name: "42号混凝土", balance: 1145.14},
-                    {id: "2", name: "Furina", balance: 19198.10},
-                    {id: "3", name: "救命，手机在自动下载元梦之星", balance: 123456.78},
-                    {id: "4", name: "数据库有点太城市化了", balance: 0.12},
-                    {id: "5", name: "1145141919810", balance: 65472.00},
-                    {id: "6", name: "花开富贵", balance: 100000.00},
-                ]
+                this.$http
+                .post("/admin/balance")
+                .then(function(res) {
+                    res = res.data;
+                    self.infoList = res;
+                    self.callData(1);
+                })
+                .catch(function(err) {
+                    self.showError(err);
+                    self.infoList = [
+                        {id: "1", name: "42号混凝土", balance: 1145.14},
+                        {id: "2", name: "Furina", balance: 19198.10},
+                        {id: "3", name: "救命，手机在自动下载元梦之星", balance: 123456.78},
+                        {id: "4", name: "数据库有点太城市化了", balance: 0.12},
+                        {id: "5", name: "1145141919810", balance: 65472.00},
+                        {id: "6", name: "花开富贵", balance: 100000.00},
+                    ];
+                    self.callData(1);
+                });
             } else if (num == 3) {
+                this.showError("接口还没写：本页所有内容均为样例数据...");
                 this.infoList = [
-                    {id: "3", timeSimulate: "1703140040000", userid: "2", action: "委托买入", type: "市价委托", stock: "000001", price: "11.45", size: "1400", finish: false},
-                    {id: "2", timeSimulate: "1703137313000", userid: "3", action: "委托卖出", type: "限价委托", stock: "000002", price: "19.19", size: "8100", finish: false},
-                    {id: "1", timeSimulate: "1702782960000", userid: "4", action: "委托买入", type: "市价委托", stock: "000003", price: "2.34", size: "56700", finish: true},
-                ]
+                    {id: "3", timeSimulate: "1703140040000", userid: "2", action: "委托买入", stock: "000001", price: "11.45", size: "1400", finish: false},
+                    {id: "2", timeSimulate: "1703137313000", userid: "3", action: "委托卖出", stock: "000002", price: "19.19", size: "8100", finish: false},
+                    {id: "1", timeSimulate: "1702782960000", userid: "4", action: "委托买入", stock: "000003", price: "2.34", size: "56700", finish: true},
+                ];
+                this.callData(1);
             }
-            this.callData(1);
         },
         getDateString: function(value) {
-            console.log(value);
             let date = new Date(Number(value));
-            console.log(date);
             return ("" + date.getFullYear() + "年" + date.getMonth() + "月" + date.getDate() + "日"
                     + date.getHours() + ":" + date.getMinutes());
         },
@@ -371,6 +387,7 @@ export default {
             this.callName = name;
             this.callId = id;
             this.actionFlag = type;
+            this.tmpArgument = id;
             if (type == 3) {
                 this.BalanceAction = "增加";
             } else {
@@ -380,16 +397,79 @@ export default {
         confirm: function() {
             this.isConfirm = false;
             this.isSetBalance = false;
+            let self = this;
+            console.log(this.tmpArgument);
             if (this.actionFlag == 1) {
                 alert("接口还没写：删除头像");
             } else if (this.actionFlag == 2) {
                 alert("接口还没写：删除用户");
             } else if (this.actionFlag == 3) {
-                alert("接口还没写：增加用户资金");
+                let value = document.getElementById("delta").value;
+                const formData = new FormData();
+                formData.append("money", value);
+                formData.append("userId", this.tmpArgument);
+
+                this.$http({
+                    method: 'post',
+                    url: '/user/charge',
+                    data: formData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function(res) {
+                    res = res.data;
+                    if (res.success) {
+                        alert("操作成功！");
+                        self.$router.push({path: '/admin/1'});
+                        location.reload();
+                    } else {
+                        self.showError("增加用户资金失败！");
+                    }
+                }).catch(function(err) {
+                    self.showError(err);
+                })
             } else if (this.actionFlag == 4) {
-                alert("接口还没写：扣除用户资金");
+                let value = document.getElementById("delta").value;
+                const formData = new FormData();
+                formData.append("money", value);
+                formData.append("userId", this.tmpArgument);
+
+                this.$http({
+                    method: 'post',
+                    url: '/user/withdraw',
+                    data: formData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function(res) {
+                    res = res.data;
+                    if (res.success) {
+                        alert("操作成功！");
+                        self.$router.push({path: '/admin/1'});
+                        location.reload();
+                    } else {
+                        self.showError("扣除用户资金失败！");
+                    }
+                }).catch(function(err) {
+                    self.showError(err);
+                })
             } else if (this.actionFlag == 5) {
-                alert("接口还没写：删除委托")
+                const formData = new FormData();
+                formData.append("orderId", this.tmpArgument);
+
+                this.$http({
+                    method: 'post',
+                    url: '/user/rollback',
+                    data: formData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function(res) {
+                    res = res.data;
+                    if (res.success) {
+                        alert("操作成功！");
+                        self.$router.push({path: '/admin/3'});
+                        location.reload();
+                    } else {
+                        self.showError("删除委托失败！");
+                    }
+                }).catch(function(err) {
+                    self.showError(err);
+                })
             }
         },
         stop: function() {
@@ -398,12 +478,15 @@ export default {
         },
         callDeleteHead: function(username, userid) {
             this.showConfirm("您确定要移除用户 " + username + " (ID: " + userid + ") 的头像，恢复为默认头像吗？", 1);
+            this.tmpArgument = userid;
         },
         callDeleteUser: function(username, userid) {
             this.showConfirm("您确定要移除用户 " + username + " (ID: " + userid + ") 吗？", 2);
+            this.tmpArgument = userid;
         },
         callDeleteSimulate: function(id) {
             this.showConfirm("您确定要移除ID为 " + id + " 的委托吗？", 5);
+            this.tmpArgument = id;
         },
         callData: function(page) {
             this.page = page;
@@ -413,7 +496,6 @@ export default {
             this.showAfter = (this.page * this.itemNum < this.infoList.length);
             this.start = (page - 1) * this.itemNum + 1;
             this.end = (page * this.itemNum < this.infoList.length)? page * this.itemNum : this.infoList.length;
-            console.log(this.start);
             for (var i = 0; (i < this.itemNum && this.start + i <= this.infoList.length)
                     || this.showList[i] != null; i++) {
                 if (i < this.itemNum && this.start + i <= this.infoList.length) {
@@ -422,7 +504,6 @@ export default {
                     this.showList[i] = undefined;
                 }
             }
-            console.log(this.showList[0].id);
         },
         changePage: function(num) {
             let self = this;

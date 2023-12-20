@@ -96,6 +96,7 @@ export default {
         self.isSuccess = true;
         window.sessionStorage.setItem("userId", res.userId);
         window.sessionStorage.setItem("user", username);
+        window.sessionStorage.setItem("isAdmin", res.privilege);
         setTimeout(function() {
           self.$router.push({path: '/userMain'});
         }, 2000);
