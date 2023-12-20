@@ -80,7 +80,7 @@ export default {
           return;
         }
         const newdata = new FormData();
-        newdata.append("userId", id);
+        newdata.append("userId", res.userId);
         self.$http({
           method: 'post',
           url: 'user/getPhoto',
