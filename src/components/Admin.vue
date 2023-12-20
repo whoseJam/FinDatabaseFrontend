@@ -212,6 +212,12 @@
     </div>
     </el-dialog>
 
+    <el-dialog title="管理操作" v-model="isSuccess" width="30%" height="50%">
+    <div style="text-align: center;">
+        操作成功！
+    </div>
+    </el-dialog>
+
     <el-dialog title="查看头像" v-model="isPhoto" width="50%" height="50%">
     <div style="text-align: center;">
         <img :src="photo" style="width: 50%;">
@@ -255,6 +261,7 @@ export default {
             isError: false,
             isPhoto: false,
             isConfirm: false,
+            isSuccess: false,
             errInfo: "",
             nowActive: 0,
             classList: ["ui active button", "ui button", "ui button", "ui button"],
@@ -312,8 +319,10 @@ export default {
             }
         },
         getInfo: function(num) {
-            //  等待接口完成，此处为测试用例
             let self = this;
+            for (var i = 0; this.showList[i] != undefined; i++) {
+                this.showList[i] = undefined;
+            }
             if (num == 0) {
                 this.$http
                 .post("/admin/list")
@@ -355,13 +364,22 @@ export default {
                     self.callData(1);
                 });
             } else if (num == 3) {
-                this.showError("接口还没写：本页所有内容均为样例数据...");
-                this.infoList = [
-                    {id: "3", timeSimulate: "1703140040000", userid: "2", action: "委托买入", stock: "000001", price: "11.45", size: "1400", finish: false},
-                    {id: "2", timeSimulate: "1703137313000", userid: "3", action: "委托卖出", stock: "000002", price: "19.19", size: "8100", finish: false},
-                    {id: "1", timeSimulate: "1702782960000", userid: "4", action: "委托买入", stock: "000003", price: "2.34", size: "56700", finish: true},
-                ];
-                this.callData(1);
+                this.$http
+                .post("/admin/simulate")
+                .then(function(res) {
+                    res = res.data;
+                    self.infoList = res;
+                    self.callData(1);
+                })
+                .catch(function(err) {
+                    self.showError(err);
+                    self.infoList = [
+                        {id: "3", timeSimulate: "1703140040000", userid: "2", action: "委托买入", stock: "000001", price: "11.45", size: "1400", finish: false},
+                        {id: "2", timeSimulate: "1703137313000", userid: "3", action: "委托卖出", stock: "000002", price: "19.19", size: "8100", finish: false},
+                        {id: "1", timeSimulate: "1702782960000", userid: "4", action: "委托买入", stock: "000003", price: "2.34", size: "56700", finish: true},
+                    ];
+                    self.callData(1);
+                });
             }
         },
         getDateString: function(value) {
@@ -400,9 +418,45 @@ export default {
             let self = this;
             console.log(this.tmpArgument);
             if (this.actionFlag == 1) {
-                alert("接口还没写：删除头像");
+                const formData = new FormData();
+                formData.append("userId", this.tmpArgument);
+
+                this.$http({
+                    method: 'post',
+                    url: '/admin/deleteHead',
+                    data: formData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function(res) {
+                    res = res.data;
+                    self.isSuccess = res.success;
+                    if (res.success) {
+                        self.getInfo(self.nowActive);
+                    } else {
+                        self.showError("删除用户头像失败！详细信息：" + res.message);
+                    }
+                }).catch(function(err) {
+                    self.showError(err);
+                })
             } else if (this.actionFlag == 2) {
-                alert("接口还没写：删除用户");
+                const formData = new FormData();
+                formData.append("userId", this.tmpArgument);
+
+                this.$http({
+                    method: 'post',
+                    url: '/admin/deleteUser',
+                    data: formData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function(res) {
+                    res = res.data;
+                    self.isSuccess = res.success;
+                    if (res.success) {
+                        self.getInfo(self.nowActive);
+                    } else {
+                        self.showError("删除用户失败！详细信息：" + res.message);
+                    }
+                }).catch(function(err) {
+                    self.showError(err);
+                })
             } else if (this.actionFlag == 3) {
                 let value = document.getElementById("delta").value;
                 const formData = new FormData();
@@ -416,12 +470,11 @@ export default {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 }).then(function(res) {
                     res = res.data;
+                    self.isSuccess = res.success;
                     if (res.success) {
-                        alert("操作成功！");
-                        self.$router.push({path: '/admin/1'});
-                        location.reload();
+                        self.getInfo(self.nowActive);
                     } else {
-                        self.showError("增加用户资金失败！");
+                        self.showError("增加用户资金失败！详细信息：" + res.message);
                     }
                 }).catch(function(err) {
                     self.showError(err);
@@ -439,12 +492,11 @@ export default {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 }).then(function(res) {
                     res = res.data;
+                    self.isSuccess = res.success;
                     if (res.success) {
-                        alert("操作成功！");
-                        self.$router.push({path: '/admin/1'});
-                        location.reload();
+                        self.getInfo(self.nowActive);
                     } else {
-                        self.showError("扣除用户资金失败！");
+                        self.showError("扣除用户资金失败！详细信息：" + res.message);
                     }
                 }).catch(function(err) {
                     self.showError(err);
@@ -460,12 +512,11 @@ export default {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 }).then(function(res) {
                     res = res.data;
+                    self.isSuccess = res.success;
                     if (res.success) {
-                        alert("操作成功！");
-                        self.$router.push({path: '/admin/3'});
-                        location.reload();
+                        self.getInfo(self.nowActive);
                     } else {
-                        self.showError("删除委托失败！");
+                        self.showError("删除委托失败！详细信息：" + res.message);
                     }
                 }).catch(function(err) {
                     self.showError(err);

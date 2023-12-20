@@ -110,7 +110,7 @@ export default {
         a.setAttribute('download', "股票数据");
         a.click();
       }).catch(function(err) {
-        self.infoAlert(err);
+        self.infoAlert("下载失败", err);
       })
     },
     infoAlert: function(title, word) {
