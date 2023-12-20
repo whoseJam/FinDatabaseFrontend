@@ -28,6 +28,8 @@ export default {
             console.log("data=",data);
             data = data.data;
             console.log(data);
+            for (let i = 0; i < data.length; i++)
+              data[i].timestamp *= 1000;
             chart.applyNewData(data);
           })
           .catch(function(err) {
