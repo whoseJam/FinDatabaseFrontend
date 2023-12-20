@@ -8,8 +8,10 @@ import KLineChart from "./KLineChart.vue";
       <div class="ui segment">
         <h1 class="ui header">
           {{ stockId }} : {{ companyName }}
-          <button class="ui button" type="button" @click="buy" style="position: absolute; left:70%">委托买入</button>
-          <button class="ui button" type="button" @click="choose" style="position: absolute; left:85%">添加自选</button></h1>
+          <button class="ui button" type="button" @click="buy" style="float: right;">委托买入</button>
+          <button class="ui button" type="button" @click="choose" style="float: right;">添加自选</button>
+          <button class="ui button" type="button" @click="download" style="float: right;">下载数据</button>
+        </h1>
         <div class="discription">
           <p>{{ introduce }}</p>
         </div>
@@ -91,6 +93,25 @@ export default {
     buy: function() {
       let self = this;
       this.$router.push({path: '/simulateBuy', query: {id: self.stockId}});
+    },
+    download: function() {
+      const formData = new FormData();
+      formData.append("stockId", this.stockId);
+      let self = this;
+      this.$http({
+        method: "post",
+        url: "/stock/download",
+        data: formData,
+        headeer: { "Content-Type": "multipart/form-data" }
+      }).then(function(res) {
+        res = res.data;
+        const a = document.createElement('a');
+        a.setAttribute('href', res.csv_url);
+        a.setAttribute('download', "股票数据");
+        a.click();
+      }).catch(function(err) {
+        self.infoAlert(err);
+      })
     },
     infoAlert: function(title, word) {
       this.infoTitle = title;
