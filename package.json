@@ -11,7 +11,8 @@
     "axios": "^1.6.2",
     "copperjs": "^1.0.1",
     "cropperjs": "^1.6.1",
-    "element-plus": "^2.4.3",
+    "element-plus": "^2.4.4",
+    "element-ui": "^2.15.14",
     "klinecharts": "^9.5.4",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
