@@ -38,7 +38,7 @@ import MyHold from './MyHold.vue';
             <div class="column">
               <router-link to="/simulateQuery">
                 <i class="window restore icon"></i><br>
-                <span>查询</span>
+                <span>资产操作</span>
               </router-link>
             </div>
           </div>

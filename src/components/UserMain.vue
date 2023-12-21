@@ -72,7 +72,6 @@
         <div style="text-align: center;">
           <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(0)">用户信息管理</button></p>
           <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(1)">用户资金管理</button></p>
-          <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(2)">查询上线记录</button></p>
           <p><button class="ui button" type="button" style="width: 40%;" @click="jump2Admin(3)">查询交易记录</button></p>
         </div>
       </div>
