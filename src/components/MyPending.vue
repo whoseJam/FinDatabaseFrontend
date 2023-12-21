@@ -42,7 +42,7 @@ export default {
     let self = this;
     console.log("get my pending userid=", userId)
     this.$http
-      .post("/stock/simulate/order/" + userId)
+      .post("/user/simulate/order/" + userId)
       .then(function(res) {
         res = res.data;
         self.pendingList = res;
@@ -56,9 +56,11 @@ export default {
   },
   methods: {
     rollback: function(orderId) {
+      const newdata = new FormData();
+      newdata.append("orderId", orderId);
       this.$http
-        .post("/rollback", {
-          orderId: orderId
+        .post("/user/rollback", {
+          data: newdata,
         })
         .then(function(res) {
           alert(res.message);
