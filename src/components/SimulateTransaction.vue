@@ -86,7 +86,7 @@ export default {
       let price = +document.getElementById("price").value;
       let size = +document.getElementById("size").value;
       let stockId = document.getElementById("stockId").value;
-      let action = (this.action === "buy" ? "买" : "卖");
+      let action = this.action;
       let type = this.transactionType;
       let userId = window.sessionStorage.getItem("userId");
       let self = this;

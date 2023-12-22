@@ -386,7 +386,7 @@ export default {
         },
         getDateString: function(value) {
             let date = new Date(Number(value));
-            return ("" + date.getFullYear() + "年" + date.getMonth() + "月" + date.getDate() + "日"
+            return ("" + date.getFullYear() + "年" + (date.getMonth() + 1) + "月" + date.getDate() + "日"
                     + date.getHours() + ":" + date.getMinutes());
         },
         showError: function(word) {

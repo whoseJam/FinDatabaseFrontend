@@ -24,7 +24,7 @@
                   <div>{{ item.name }}</div>
                   <div>
                     <div :style="['display: inline-block', { color: item.type === 'buy' ? 'red' : 'green' }]">{{ item.type === "buy" ? "买" : "卖" }}</div>
-                    <div style="display: inline-block;">{{ item.time }}</div>
+                    <div style="display: inline-block">{{ getDateString(item.time) }}</div>
                   </div>
                 </div>
               </td>
@@ -71,19 +71,27 @@ export default {
   },
   methods: {
     rollback: function(orderId) {
+      console.log(orderId);
       const newdata = new FormData();
       newdata.append("orderId", orderId);
-      this.$http
-        .post("/user/rollback", {
+      this.$http({
+          method: 'post',
+          url: '/user/rollback',
           data: newdata,
-        })
-        .then(function(res) {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }).then(function(res) {
+          res = res.data;
           alert(res.message);
           location.reload();
-        })
-        .catch(function(err) {
+        }).catch(function(err) {
           alert(err);
         })
+    },
+    getDateString: function(value) {
+      value *= 1000;
+      let date = new Date(Number(value));
+      return ("" + (date.getMonth() + 1) + "月" + date.getDate() + "日"
+              + date.getHours() + ":" + date.getMinutes());
     },
   }
 }
