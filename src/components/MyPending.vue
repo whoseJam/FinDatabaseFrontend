@@ -1,39 +1,53 @@
 <template>
-  <table class="ui unstackable table">
-    <thead>
-      <tr>
-        <th>委托时间</th>
-        <th>委托价</th>
-        <th>委托数量</th>
-        <th>操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item in pendingList">
-        <td>
-          <div class="vertical masthead segment">
-            <div>{{ item.name }}</div>
-            <div>
-              <div :style="['display: inline-block', { color: item.type === 'buy' ? 'red' : 'green' }]">{{ item.type === "buy" ? "买" : "卖" }}</div>
-              <div style="display: inline-block;">{{ item.time }}</div>
-            </div>
-          </div>
-        </td>
-        <td>{{ item.price }}</td>
-        <td>{{ item.size }}</td>
-        <td>
-          <button class="ui negative button" @click="rollback(item.orderId)">撤单</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="ui container">
+    <div class="ui vertical masthead segment">
+      <div class="ui segment">
+        <h3 class="ui header">我的委托</h3>
+        <input id="agree" type="checkbox" name="agree" v-model="checked"/>仅显示未完成委托
+      </div>
+
+      <div class="ui segment">
+        <table class="ui unstackable table">
+          <thead>
+            <tr>
+              <th>委托时间</th>
+              <th>委托价</th>
+              <th>委托数量</th>
+              <th>完成状况</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in pendingList">
+              <td v-if="!item.finished || !checked">
+                <div class="vertical masthead segment">
+                  <div>{{ item.name }}</div>
+                  <div>
+                    <div :style="['display: inline-block', { color: item.type === 'buy' ? 'red' : 'green' }]">{{ item.type === "buy" ? "买" : "卖" }}</div>
+                    <div style="display: inline-block;">{{ item.time }}</div>
+                  </div>
+                </div>
+              </td>
+              <td v-if="!item.finished || !checked">{{ item.price }}</td>
+              <td v-if="!item.finished || !checked">{{ item.size }}</td>
+              <td v-if="!item.finished || !checked">{{ (item.finished)? "已完成" : "未完成" }}</td>
+              <td v-if="!item.finished">
+                <button class="ui negative button" @click="rollback(item.orderId)">撤单</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data: function() {
     return {
-      pendingList: []
+      pendingList: [],
+      checked: false
     }
   },
   mounted: function() {
@@ -50,7 +64,8 @@ export default {
       .catch(function(err) {
         alert(err);
         self.pendingList = [
-          { name: "黄山旅游", type: "buy", time: "23:07:06", price: 11.29, size: 1000, orderId: 1 }
+          { name: "黄山旅游", type: "buy", time: "23:07:06", price: 11.29, size: 1000, finished: false },
+          { name: "黄山旅游", type: "buy", time: "13:07:06", price: 11.28, size: 1000, finished: true },
         ]
       })
   },
@@ -64,11 +79,12 @@ export default {
         })
         .then(function(res) {
           alert(res.message);
+          location.reload();
         })
         .catch(function(err) {
           alert(err);
         })
-    }
+    },
   }
 }
 </script>

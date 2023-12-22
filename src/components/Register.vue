@@ -29,7 +29,7 @@
           <div class="field">
             <label>
               <input id="agree" type="checkbox" name="agree" />
-              我同意《股票查询及模拟交易平台使用说明》
+              我同意<router-link to="/about">《股票查询及模拟交易平台使用说明》</router-link>
             </label>
           </div>
           <button class="ui button" type="button" @click="onRegister">注册</button>

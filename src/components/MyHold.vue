@@ -28,6 +28,7 @@
         <th>盈亏</th>
         <th>持仓/可用</th>
         <th>现价/成本</th>
+        <th>操作</th>
       </tr>
     </thead>
     <tbody>
@@ -56,9 +57,17 @@
             <div>{{ item.holdPrice }}</div>
           </div>
         </td>
+        <td>
+          <button class="ui primary button" @click="jump2Sold(item.code)">委托卖出</button>
+        </td>
       </tr>
     </tbody>
   </table>
+  <el-dialog :title="infoTitle" v-model="isInfoVisible" width="30%" height="50%">
+    <div style="text-align: center;">
+      <p>{{ info }}</p>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -86,7 +95,7 @@ export default {
         self.allBalance = res.balance;
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("读取信息出错", err);
         self.allBalance = 484300;
       });
     this.$http
@@ -97,7 +106,7 @@ export default {
         self.setDetail(self.holdList);
       })
       .catch(function(err) {
-        alert(err);
+        self.infoAlert("读取信息出错", err);
         self.holdList = [
           { name: "富春股份", code: "SZ300299", newValue: 33100.00, delta: -15700.00, deltaRate: -32.17, hold: 5000, newPrice: 6.62, holdPrice: 9.76 }
         ]
@@ -123,6 +132,14 @@ export default {
       this.$router.push({
         path: "/stock/" + id
       });
+    },
+    jump2Sold: function(code) {
+      this.$router.push({path: '/simulateSell', query: {id: code}});
+    },
+    infoAlert: function(title, word) {
+      this.infoTitle = title;
+      this.info = word;
+      this.isInfoVisible = true;
     }
   }
 }
